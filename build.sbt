@@ -11,13 +11,9 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   specs2 % Test,
-  "org.anormcypher" %% "anormcypher" % "0.7.1"
 )
 
-resolvers ++= Seq(
-  "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
-  "anormcypher" at "http://repo.anormcypher.org/"
-)
+resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
