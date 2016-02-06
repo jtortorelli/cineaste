@@ -1,7 +1,5 @@
 package com.wizardsofsmart.cineaste.domain
 
-import java.util.Date
-
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
@@ -13,7 +11,7 @@ case class Film(
                  title: String,
                  japaneseTitleTranslation: Option[String],
                  japaneseTitleUnicode: Option[String],
-                 releaseDate: Date,
+                 releaseDate: String,
                  duration: String
                )
 
@@ -26,7 +24,7 @@ object Film {
       (JsPath \ "title").read[String] and
       (JsPath \ "jt_translation").readNullable[String] and
       (JsPath \ "jt_unicode").readNullable[String] and
-      (JsPath \ "release_date").read[Date] and
+      (JsPath \ "release_date").read[String] and
       (JsPath \ "duration").read[String]
     ) (Film.apply _)
 
