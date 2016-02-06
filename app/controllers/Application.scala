@@ -2,29 +2,17 @@ package controllers
 
 import javax.inject.Inject
 
-import com.wizardofsmart.cineaste.Global
+import com.wizardsofsmart.cineaste.service.FilmService
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json
-import play.api.libs.ws.WSClient
 import play.api.mvc._
 
-class Application @Inject() (ws: WSClient) extends Controller {
+
+class Application @Inject()(filmService: FilmService) extends Controller {
 
   def index = Action.async {
-    val url = Global.neo4jEndpoint
-    val request = ws.url(url)
-    val complexRequest = request.withHeaders("Accept" -> "application/json", "Content-Type" -> "application/json")
-    val jsonString = Json.parse(
-      """
-        {
-        "statements": [{
-        "statement": "match (n:Film) return n"
-        }]
-        }
-      """)
-    val result = complexRequest.post(jsonString.toString())
+    val result = filmService.retrieveFilmsList
     result.map { response =>
-        Ok(response.body)
+      Ok(response.toString())
     }
   }
 
