@@ -1,0 +1,18 @@
+@import com.wizardsofsmart.cineaste.domain.Film
+@(films: Seq[Film])
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Films - Godzilla Cineaste</title>
+    </head>
+    <body>
+        <h1>Films</h1>
+        <p>This is where the films go.</p>
+        <ul>
+            @for(film <- films) {
+                <li>@film.title (@film.releaseYear)</li>
+            }
+        </ul>
+    </body>
+</html>

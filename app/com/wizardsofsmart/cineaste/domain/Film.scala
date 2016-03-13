@@ -2,46 +2,50 @@ package com.wizardsofsmart.cineaste.domain
 
 import java.util.Date
 
+import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
-case class Film(
-                 key: String,
-                 japaneseTitleTransliteration: Option[String],
-                 display: String,
-                 aliases: Option[Seq[String]],
-                 title: String,
-                 japaneseTitleTranslation: Option[String],
-                 japaneseTitleUnicode: Option[String],
-                 releaseDate: Date,
-                 duration: String
-               )
+case class Film(uuid: String, japaneseTitleTransliteration: Option[String], showcase: Boolean, aliases: Option[Seq[String]], title: String, japaneseTitleTranslation: Option[String], japaneseTitleUnicode: Option[String], releaseDate: Date, duration: String) {
+   def releaseYear = {
+      new DateTime(this.releaseDate).getYear
+   }
+
+   def sortTitle = {
+      if (this.title.startsWith("The ")) {
+         "The ".r replaceFirstIn(this.title, "")
+      } else {
+         this.title
+      }
+   }
+}
 
 object Film {
-  implicit val filmReads: Reads[Film] = (
-    (JsPath \ "key").read[String] and
-      (JsPath \ "jt_transliteration").readNullable[String] and
-      (JsPath \ "display").read[String] and
-      (JsPath \ "aliases").readNullable[Seq[String]] and
-      (JsPath \ "title").read[String] and
-      (JsPath \ "jt_translation").readNullable[String] and
-      (JsPath \ "jt_unicode").readNullable[String] and
-      (JsPath \ "release_date").read[Date] and
-      (JsPath \ "duration").read[String]
-    ) (Film.apply _)
+   implicit val filmReads: Reads[Film] = (
+         (JsPath \ "uuid").read[String] and
+               (JsPath \ "jt_transliteration").readNullable[String] and
+               (JsPath \ "showcase").read[Boolean] and
+               (JsPath \ "aliases").readNullable[Seq[String]] and
+               (JsPath \ "title").read[String] and
+               (JsPath \ "jt_translation").readNullable[String] and
+               (JsPath \ "jt_unicode").readNullable[String] and
+               (JsPath \ "release_date").read[Date] and
+               (JsPath \ "duration").read[String]
+         ) (Film.apply _)
 
 
-  implicit val filmWrites = new Writes[Film] {
-    def writes(film: Film) = Json.obj(
-      "key" -> film.key,
-      "jt_transliteration" -> film.japaneseTitleTransliteration,
-      "display" -> film.display,
-      "aliases" -> film.aliases,
-      "title" -> film.title,
-      "jt_translation" -> film.japaneseTitleTranslation,
-      "jt_unicode" -> film.japaneseTitleUnicode,
-      "release_date" -> film.releaseDate,
-      "duration" -> film.duration
-    )
-  }
+   implicit val filmWrites = new Writes[Film] {
+      def writes(film: Film) = Json.obj(
+         "uuid" -> film.uuid,
+         "jt_transliteration" -> film.japaneseTitleTransliteration,
+         "showcase" -> film.showcase,
+         "aliases" -> film.aliases,
+         "title" -> film.title,
+         "jt_translation" -> film.japaneseTitleTranslation,
+         "jt_unicode" -> film.japaneseTitleUnicode,
+         "release_date" -> film.releaseDate,
+         "duration" -> film.duration
+      )
+   }
+
 }

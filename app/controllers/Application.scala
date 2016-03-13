@@ -9,11 +9,15 @@ import play.api.mvc._
 
 class Application @Inject()(filmService: FilmService) extends Controller {
 
-  def index = Action.async {
-    val result = filmService.retrieveFilmsList
-    result.map { response =>
-      Ok(response.toString())
-    }
-  }
+   def index = Action {
+      Ok(views.html.home())
+   }
+
+   def films = Action.async {
+      filmService.films.map {
+         response =>
+            Ok(views.html.films(response))
+      }
+   }
 
 }
