@@ -14,8 +14,8 @@ class Neo4jQueries @Inject()(ws: WSClient) {
       "http://localhost:7474/db/data/transaction/commit"
    }
 
-   def filmsQuery = {
-      "match (n:Film) return n"
+   def showcaseFilmsQuery = {
+      "match (n:Film) where n.showcase = true return n"
    }
 
 }

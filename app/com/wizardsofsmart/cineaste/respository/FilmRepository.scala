@@ -15,7 +15,7 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
       queries.statementRequest.post(
          Json.toJson(
             Neo4jStatement.createStatement(
-               queries.filmsQuery))
+               queries.showcaseFilmsQuery))
                .toString()).map {
          response => response
       }
