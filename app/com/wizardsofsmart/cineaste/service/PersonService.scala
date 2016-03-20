@@ -4,13 +4,15 @@ import javax.inject.Inject
 
 import com.wizardsofsmart.cineaste.domain.Person
 import com.wizardsofsmart.cineaste.respository.PersonRepository
+import com.wizardsofsmart.cineaste.value.error.DomainError
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 class PersonService @Inject()(personRepository: PersonRepository) {
-   def people = {
+   def people: Future[Either[DomainError, Seq[Person]]] = {
       personRepository.people.map {
          case Right(response) =>
             val people = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Person]

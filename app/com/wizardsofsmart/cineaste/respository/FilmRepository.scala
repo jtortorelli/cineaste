@@ -5,14 +5,13 @@ import javax.inject.Inject
 
 import com.wizardsofsmart.cineaste.domain.neo4j.Neo4jStatement
 import com.wizardsofsmart.cineaste.respository.neo4j.Neo4jQueries
+import com.wizardsofsmart.cineaste.value.error.Neo4jConnectionError
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class FilmRepository @Inject()(queries: Neo4jQueries) {
-
-   private val CONNECT_EXCEPTION_MSG: String = "The database is offline."
 
    def films = {
       queries.statementRequest.post(
@@ -22,7 +21,7 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
                .toString()).map {
          response => Right(response)
       } recover {
-         case _: ConnectException => Left(CONNECT_EXCEPTION_MSG)
+         case _: ConnectException => Left(new Neo4jConnectionError)
       }
    }
 
@@ -34,7 +33,7 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
                .toString()).map {
          response => Right(response)
       } recover {
-         case _: ConnectException => Left(CONNECT_EXCEPTION_MSG)
+         case _: ConnectException => Left(new Neo4jConnectionError)
       }
    }
 

@@ -4,13 +4,15 @@ import javax.inject.Inject
 
 import com.wizardsofsmart.cineaste.domain.Film
 import com.wizardsofsmart.cineaste.respository.FilmRepository
+import com.wizardsofsmart.cineaste.value.error.{DomainError, EmptyResultsError}
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 class FilmService @Inject()(filmRepository: FilmRepository) {
-   def films = {
+   def films: Future[Either[DomainError, Seq[Film]]] = {
       filmRepository.films.map {
          case Right(response) =>
             val films = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Film]
@@ -19,14 +21,14 @@ class FilmService @Inject()(filmRepository: FilmRepository) {
       }
    }
 
-   def film(uuid: String) = {
+   def film(uuid: String): Future[Either[DomainError, Film]] = {
       filmRepository.film(uuid).map {
          case Right(response) =>
             val films = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Film]
             if (films.nonEmpty) {
                Right(films.head)
             } else {
-               Left("Film not found")
+               Left(new EmptyResultsError)
             }
          case Left(error) => Left(error)
       }
