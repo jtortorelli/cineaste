@@ -8,5 +8,8 @@ GET        /                    controllers.Application.index
 # Films
 GET        /films               controllers.FilmController.films
 
+# People
+GET        /people              controllers.PersonController.people
+
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)
