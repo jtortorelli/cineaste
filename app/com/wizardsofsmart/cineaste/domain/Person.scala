@@ -1,7 +1,5 @@
 package com.wizardsofsmart.cineaste.domain
 
-import java.util.Date
-
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
@@ -11,8 +9,8 @@ case class Person(
                        lastName: String,
                        japaneseName: Option[String],
                        birthName: Option[String],
-                       dob: Option[Date],
-                       dod: Option[Date],
+                       dob: Option[String],
+                       dod: Option[String],
                        aliases: Option[Seq[String]],
                        birthPlace: Option[String],
                        deathPlace: Option[String],
@@ -26,8 +24,8 @@ object Person {
                (JsPath \ "last_name").read[String] and
                (JsPath \ "japanese_name").readNullable[String] and
                (JsPath \ "birth_name").readNullable[String] and
-               (JsPath \ "dob").readNullable[Date] and
-               (JsPath \ "dod").readNullable[Date] and
+               (JsPath \ "dob").readNullable[String] and
+               (JsPath \ "dod").readNullable[String] and
                (JsPath \ "aliases").readNullable[Seq[String]] and
                (JsPath \ "birth_place").readNullable[String] and
                (JsPath \ "death_place").readNullable[String] and
