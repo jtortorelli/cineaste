@@ -7,6 +7,7 @@ GET        /                    controllers.Application.index
 
 # Films
 GET        /films               controllers.FilmController.films
+GET        /films/:uuid         controllers.FilmController.film(uuid)
 
 # People
 GET        /people              controllers.PersonController.people
