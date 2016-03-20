@@ -1,5 +1,6 @@
 package com.wizardsofsmart.cineaste.respository
 
+import java.net.ConnectException
 import javax.inject.Inject
 
 import com.wizardsofsmart.cineaste.domain.neo4j.Neo4jStatement
@@ -17,7 +18,9 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
             Neo4jStatement.createStatement(
                queries.showcaseFilmsQuery))
                .toString()).map {
-         response => response
+         response => Right(response)
+      } recover {
+         case _: ConnectException => Left("The database is offline.")
       }
    }
 

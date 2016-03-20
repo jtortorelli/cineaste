@@ -12,9 +12,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class FilmService @Inject()(filmRepository: FilmRepository) {
    def films = {
       filmRepository.films.map {
-         response =>
+         case Right(response) =>
             val films = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Film]
-            films.sortWith(_.sortTitle < _.sortTitle)
+            Right(films.sortWith(_.sortTitle < _.sortTitle))
+         case Left(error) => Left(error)
       }
    }
 

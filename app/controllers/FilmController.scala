@@ -12,8 +12,8 @@ class FilmController @Inject()(filmService: FilmService) extends Controller {
 
    def films = Action.async {
       filmService.films.map {
-         response =>
-            Ok(views.html.films(response))
+         case Right(response) => Ok(views.html.films(response))
+         case Left(error) => Ok(error)
       }
    }
 
