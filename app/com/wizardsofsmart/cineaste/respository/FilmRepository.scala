@@ -28,8 +28,9 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
    def film(uuid: String) = {
       queries.statementRequest.post(
          Json.toJson(
-            Neo4jStatement.createStatement(
-               queries.showcasedFilmQuery(uuid)))
+            Neo4jStatement.createStatements(
+               queries.showcasedFilmQuery(uuid),
+               queries.filmStaffQuery(uuid)))
                .toString()).map {
          response => Right(response)
       } recover {

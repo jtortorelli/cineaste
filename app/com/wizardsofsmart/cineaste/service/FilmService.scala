@@ -2,7 +2,7 @@ package com.wizardsofsmart.cineaste.service
 
 import javax.inject.Inject
 
-import com.wizardsofsmart.cineaste.domain.Film
+import com.wizardsofsmart.cineaste.domain.{Film, FilmStaff}
 import com.wizardsofsmart.cineaste.respository.FilmRepository
 import com.wizardsofsmart.cineaste.value.error.{DomainError, EmptyResultsError}
 import play.api.libs.json.Json
@@ -21,14 +21,16 @@ class FilmService @Inject()(filmRepository: FilmRepository) {
       }
    }
 
-   def film(uuid: String): Future[Either[DomainError, Film]] = {
+   def film(uuid: String): Future[Either[DomainError, (Film, Seq[FilmStaff])]] = {
       filmRepository.film(uuid).map {
          case Right(response) =>
-            val films = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Film]
-            if (films.nonEmpty) {
-               Right(films.head)
-            } else {
+            val json = Json.parse(response.body) \\ "data"
+            val films = for (r <- json(0) \\ "row") yield r(0).as[Film]
+            val staff = for (r <- json(1) \\ "row") yield r(0).as[FilmStaff]
+            if (films.isEmpty || staff.isEmpty) {
                Left(new EmptyResultsError)
+            } else {
+               Right((films.head, staff))
             }
          case Left(error) => Left(error)
       }

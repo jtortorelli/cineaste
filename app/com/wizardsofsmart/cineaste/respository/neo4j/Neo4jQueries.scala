@@ -23,6 +23,10 @@ class Neo4jQueries @Inject()(ws: WSClient) {
       s"""match (n:Film {uuid: "$uuid"}) where n.showcase = true return n"""
    }
 
+   def filmStaffQuery(uuid: String) = {
+      s"""match (n:Person)-[r:WORKED_ON]->(m:Film {uuid: \"$uuid\"}) where r.role <> \"Actor\" with n, r, m order by r.order match (n)-[r]->(m) with r.role as role, collect(n.first_name + \" \" + n.last_name) as names, collect(r.order) as orders order by head(orders) return {role: role, names: names, orders: orders}"""
+   }
+
    // Person queries
    def peopleQuery = {
       "match (n:Person) return n"

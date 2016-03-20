@@ -24,5 +24,10 @@ object Neo4jStatement {
    def createStatement(query: String) = {
       new Neo4jStatement(List(new Statement(query)))
    }
+
+   def createStatements(queries: String*) = {
+      val statements = for (query <- queries) yield new Statement(query)
+      new Neo4jStatement(statements)
+   }
 }
 
