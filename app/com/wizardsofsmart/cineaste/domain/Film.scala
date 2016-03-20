@@ -15,7 +15,7 @@ case class Film(
                      japaneseTitleTranslation: Option[String],
                      japaneseTitleUnicode: Option[String],
                      releaseDate: Date,
-                     duration: String
+                     duration: Int
                ) {
    def releaseYear = {
       new DateTime(this.releaseDate).getYear
@@ -40,7 +40,7 @@ object Film {
                (JsPath \ "jt_translation").readNullable[String] and
                (JsPath \ "jt_unicode").readNullable[String] and
                (JsPath \ "release_date").read[Date] and
-               (JsPath \ "duration").read[String]
+               (JsPath \ "duration").read[Int]
          ) (Film.apply _)
 
 
