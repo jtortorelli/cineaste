@@ -12,13 +12,13 @@ class FilmController @Inject()(filmService: FilmService) extends Controller {
 
    def films = Action.async {
       filmService.films.map {
-         case Right(response) => Ok(views.html.films(response))
+         case Right(response) => Ok(views.html.film.films(response))
          case Left(error) => Ok(error)
       }
    }
 
    def film(uuid: String) = Action {
-      Ok(views.html.film(filmService.film(uuid)))
+      Ok(views.html.film.film(filmService.film(uuid)))
    }
 
 }
