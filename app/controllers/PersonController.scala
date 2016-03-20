@@ -12,7 +12,7 @@ class PersonController @Inject()(personService: PersonService) extends Controlle
 
    def people = Action.async {
       personService.people.map {
-         case Right(response) => Ok(views.html.people(response.body))
+         case Right(response) => Ok(views.html.people(response))
          case Left(error) => Ok(error)
       }
    }
