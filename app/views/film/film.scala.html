@@ -1,4 +1,5 @@
-@(response: String)
+@import com.wizardsofsmart.cineaste.domain.Film
+@(film: Film)
 <!DOCTYPE html>
     <html>
         <head>
@@ -8,6 +9,6 @@
             @views.html.navbar()
             <h1>Film Title</h1>
             <p>This is the individual film page</p>
-            <p>@response</p>
+            <p>@film.title</p>
         </body>
     </html>

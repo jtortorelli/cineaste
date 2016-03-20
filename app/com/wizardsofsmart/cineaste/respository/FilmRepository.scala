@@ -12,6 +12,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class FilmRepository @Inject()(queries: Neo4jQueries) {
 
+   private val CONNECT_EXCEPTION_MSG: String = "The database is offline."
+
    def films = {
       queries.statementRequest.post(
          Json.toJson(
@@ -20,12 +22,20 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
                .toString()).map {
          response => Right(response)
       } recover {
-         case _: ConnectException => Left("The database is offline.")
+         case _: ConnectException => Left(CONNECT_EXCEPTION_MSG)
       }
    }
 
    def film(uuid: String) = {
-      queries.filmQuery(uuid)
+      queries.statementRequest.post(
+         Json.toJson(
+            Neo4jStatement.createStatement(
+               queries.filmQuery(uuid)))
+               .toString()).map {
+         response => Right(response)
+      } recover {
+         case _: ConnectException => Left(CONNECT_EXCEPTION_MSG)
+      }
    }
 
 }

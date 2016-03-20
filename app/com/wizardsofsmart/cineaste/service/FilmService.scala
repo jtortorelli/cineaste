@@ -20,7 +20,16 @@ class FilmService @Inject()(filmRepository: FilmRepository) {
    }
 
    def film(uuid: String) = {
-      filmRepository.film(uuid)
+      filmRepository.film(uuid).map {
+         case Right(response) =>
+            val films = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Film]
+            if (films.nonEmpty) {
+               Right(films.head)
+            } else {
+               Left("Film not found")
+            }
+         case Left(error) => Left(error)
+      }
    }
 
 }

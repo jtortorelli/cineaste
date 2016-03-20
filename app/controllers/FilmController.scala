@@ -17,8 +17,11 @@ class FilmController @Inject()(filmService: FilmService) extends Controller {
       }
    }
 
-   def film(uuid: String) = Action {
-      Ok(views.html.film.film(filmService.film(uuid)))
+   def film(uuid: String) = Action.async {
+      filmService.film(uuid).map {
+         case Right(response) => Ok(views.html.film.film(response))
+         case Left(error) => Ok(error)
+      }
    }
 
 }
