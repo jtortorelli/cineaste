@@ -24,4 +24,8 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
       }
    }
 
+   def film(uuid: String) = {
+      "This is the film page for " + uuid + " from the repository"
+   }
+
 }

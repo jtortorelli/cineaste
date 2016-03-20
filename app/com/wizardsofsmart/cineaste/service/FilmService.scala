@@ -20,7 +20,7 @@ class FilmService @Inject()(filmRepository: FilmRepository) {
    }
 
    def film(uuid: String) = {
-      "This is the film page for " + uuid + " from the service"
+      filmRepository.film(uuid)
    }
 
 }
