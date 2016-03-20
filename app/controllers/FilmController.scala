@@ -15,7 +15,7 @@ class FilmController @Inject()(filmService: FilmService) extends Controller {
       filmService.films.map {
          case Right(response) => Ok(views.html.film.films(response))
          case Left(error) => error match {
-            case _: Neo4jConnectionError => ServiceUnavailable("Could not connect to database")
+            case e: Neo4jConnectionError => ServiceUnavailable(e.message)
             case _ => InternalServerError
          }
       }
@@ -25,8 +25,8 @@ class FilmController @Inject()(filmService: FilmService) extends Controller {
       filmService.film(uuid).map {
          case Right(response) => Ok(views.html.film.film(response))
          case Left(error) => error match {
-            case _: Neo4jConnectionError => ServiceUnavailable("Could not connect to database")
-            case _: EmptyResultsError => NotFound("Query returned no results")
+            case e: Neo4jConnectionError => ServiceUnavailable(e.message)
+            case e: EmptyResultsError => NotFound(e.message)
             case _ => InternalServerError
          }
       }

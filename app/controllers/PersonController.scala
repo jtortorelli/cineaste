@@ -15,7 +15,7 @@ class PersonController @Inject()(personService: PersonService) extends Controlle
       personService.people.map {
          case Right(response) => Ok(views.html.people(response))
          case Left(error) => error match {
-            case _: Neo4jConnectionError => ServiceUnavailable("Could not connect to database")
+            case e: Neo4jConnectionError => ServiceUnavailable(e.message)
             case _ => InternalServerError
          }
       }
