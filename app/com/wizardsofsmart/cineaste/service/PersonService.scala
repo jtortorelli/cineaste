@@ -1,8 +1,12 @@
 package com.wizardsofsmart.cineaste.service
 
-class PersonService {
+import javax.inject.Inject
+
+import com.wizardsofsmart.cineaste.respository.PersonRepository
+
+class PersonService @Inject()(personRepository: PersonRepository) {
    def people = {
-      "This is a list of people"
+      personRepository.people
    }
 
 }
