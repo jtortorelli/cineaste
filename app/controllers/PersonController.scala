@@ -8,7 +8,7 @@ import play.api.mvc.{Action, Controller}
 class PersonController @Inject()(personService: PersonService) extends Controller {
 
    def people = Action {
-      Ok(personService.people)
+      Ok(views.html.people(personService.people))
    }
 
 }
