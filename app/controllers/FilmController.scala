@@ -18,7 +18,7 @@ class FilmController @Inject()(filmService: FilmService) extends Controller {
    }
 
    def film(uuid: String) = Action {
-      Ok(filmService.film(uuid))
+      Ok(views.html.film(filmService.film(uuid)))
    }
 
 }
