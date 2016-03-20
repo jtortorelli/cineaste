@@ -18,4 +18,8 @@ class Neo4jQueries @Inject()(ws: WSClient) {
       "match (n:Film) where n.showcase = true return n"
    }
 
+   def peopleQuery = {
+      "match (n:Person) return n"
+   }
+
 }
