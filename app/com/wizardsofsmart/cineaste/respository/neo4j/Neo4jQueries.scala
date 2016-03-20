@@ -15,12 +15,12 @@ class Neo4jQueries @Inject()(ws: WSClient) {
    }
 
    // Film queries
-   def showcaseFilmsQuery = {
+   def showcasedFilmsQuery = {
       "match (n:Film) where n.showcase = true return n"
    }
 
-   def filmQuery(uuid: String) = {
-      s"""match (n:Film {uuid: "$uuid"}) return n"""
+   def showcasedFilmQuery(uuid: String) = {
+      s"""match (n:Film {uuid: "$uuid"}) where n.showcase = true return n"""
    }
 
    // Person queries

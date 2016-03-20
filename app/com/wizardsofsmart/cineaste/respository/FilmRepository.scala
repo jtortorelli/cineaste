@@ -17,7 +17,7 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
       queries.statementRequest.post(
          Json.toJson(
             Neo4jStatement.createStatement(
-               queries.showcaseFilmsQuery))
+               queries.showcasedFilmsQuery))
                .toString()).map {
          response => Right(response)
       } recover {
@@ -29,7 +29,7 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
       queries.statementRequest.post(
          Json.toJson(
             Neo4jStatement.createStatement(
-               queries.filmQuery(uuid)))
+               queries.showcasedFilmQuery(uuid)))
                .toString()).map {
          response => Right(response)
       } recover {
