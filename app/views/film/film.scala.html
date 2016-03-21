@@ -10,5 +10,18 @@
             @views.html.navbar()
             <h1>@film.title</h1>
             <p>This is the individual film page</p>
+            <table>
+                <thead>Staff</thead>
+                @for(role <- staff) {
+                    <tr>
+                        <td style="vertical-align: top">@role.role</td>
+                        <td>
+                            @for(name <- role.names) {
+                                @name<br/>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
         </body>
     </html>
