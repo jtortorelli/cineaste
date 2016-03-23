@@ -10,6 +10,9 @@
         @views.html.navbar()
         <h1>@film.title</h1>
         <p>This is the individual film page</p>
+        @if(film.aliases.isDefined) {
+            <p>Also known as @film.aliases.get.mkString(", ")</p>
+        }
         <hr/>
         <table>
             <thead>Staff</thead>
