@@ -1,27 +1,62 @@
-@import com.wizardsofsmart.cineaste.domain.Film
-@import com.wizardsofsmart.cineaste.domain.FilmStaff
-@(film: Film, staff: Seq[FilmStaff])
+@import com.wizardsofsmart.cineaste.domain.{Film, FilmCast, FilmStaff}
+
+@(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast])
 <!DOCTYPE html>
-    <html>
-        <head>
-            <title>@film.title - Godzilla Cineaste</title>
-        </head>
-        <body>
-            @views.html.navbar()
-            <h1>@film.title</h1>
-            <p>This is the individual film page</p>
-            <table>
-                <thead>Staff</thead>
-                @for(role <- staff) {
+<html>
+    <head>
+        <title>@film.title - Godzilla Cineaste</title>
+    </head>
+    <body>
+        @views.html.navbar()
+        <h1>@film.title</h1>
+        <p>This is the individual film page</p>
+        <hr/>
+        <table>
+            <thead>Staff</thead>
+            @for(role <- staff) {
+                <tr>
+                    <td style="vertical-align : top">@role.role</td>
+                    <td>
+                    @for(person <- role.people) {
+                        @person.firstName @person.lastName <br/>
+                    }
+                    </td>
+                </tr>
+            }
+        </table>
+        <hr/>
+        <table>
+            <thead>Cast</thead>
+            @defining(cast.filter(_.orders.head < 99)) { billedCast =>
+                @for(member <- billedCast) {
                     <tr>
-                        <td style="vertical-align: top">@role.role</td>
+                        <td style="vertical-align : top">@member.person.firstName @member.person.lastName</td>
                         <td>
-                            @for(name <- role.names) {
-                                @name<br/>
-                            }
+                        @for(character <- member.characters) {
+                            @character <br/>
+                        }
                         </td>
                     </tr>
                 }
-            </table>
-        </body>
-    </html>
+            }
+        </table>
+        @defining(cast.filter(_.orders.head == 99)) { uncreditedCast =>
+            @if(uncreditedCast.nonEmpty) {
+                <table>
+
+                    <thead>Uncredited Cast</thead>
+                    @for(member <- uncreditedCast) {
+                        <tr>
+                            <td style="vertical-align : top">@member.person.firstName @member.person.lastName</td>
+                            <td>
+                            @for(character <- member.characters) {
+                                @character <br/>
+                            }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        }
+    </body>
+</html>
