@@ -1,11 +1,36 @@
 package com.wizardsofsmart.cineaste.domain
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, Reads, Writes}
+import play.api.libs.json.{JsPath, Reads, __}
 
-sealed trait People
+sealed trait People {
+   val displayName: String
+   val sortName: String
+}
 
-case class Group(uuid: String, name: String) extends People
+object People {
+   implicit val peopleReads: Reads[People] = {
+      __.read[Person].map(x => x: People) orElse __.read[Group].map(x => x: People)
+   }
+}
+
+case class Group(uuid: String, name: String) extends People {
+   override val displayName: String = this.name
+   override val sortName: String = {
+      if (this.name.startsWith("The ")) {
+         "The ".r replaceFirstIn(this.name, "")
+      } else {
+         this.name
+      }
+   }
+}
+
+object Group {
+   implicit val groupReads: Reads[Group] = (
+         (JsPath \ "uuid").read[String] and
+               (JsPath \ " name").read[String]
+         ) (Group.apply _)
+}
 
 case class Person(uuid: String,
                   firstName: String,
@@ -17,7 +42,10 @@ case class Person(uuid: String,
                   aliases: Option[Seq[String]],
                   birthPlace: Option[String],
                   deathPlace: Option[String],
-                  showcase: Boolean) extends People
+                  showcase: Boolean) extends People {
+   override val displayName: String = s"${this.firstName} ${this.lastName}"
+   override val sortName: String = s"${this.lastName}, ${this.firstName}"
+}
 
 object Person {
    implicit val personReads: Reads[Person] = (

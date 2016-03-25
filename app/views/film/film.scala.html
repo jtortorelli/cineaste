@@ -31,7 +31,7 @@
                     <td style="vertical-align : top">@role.role</td>
                     <td>
                     @for(person <- role.people) {
-                        @person.firstName @person.lastName <br/>
+                        @person.displayName <br/>
                     }
                     </td>
                 </tr>
@@ -45,7 +45,7 @@
             @defining(cast.filter(_.orders.head < 99)) { billedCast =>
                 @for(member <- billedCast) {
                     <tr>
-                        <td style="vertical-align : top">@member.person.firstName @member.person.lastName</td>
+                        <td style="vertical-align : top">@member.person.displayName</td>
                         <td>
                         @for(character <- member.characters) {
                             @character <br/>
@@ -64,7 +64,7 @@
                     <thead>Uncredited Cast</thead>
                     @for(member <- uncreditedCast) {
                         <tr>
-                            <td style="vertical-align : top">@member.person.firstName @member.person.lastName</td>
+                            <td style="vertical-align : top">@member.person.displayName</td>
                             <td>
                             @for(character <- member.characters) {
                                 @character <br/>

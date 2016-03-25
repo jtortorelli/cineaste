@@ -11,7 +11,7 @@
             <p>This is the people page</p>
             <ul>
                 @for(person <- people) {
-                    <li>@person.lastName, @person.firstName</li>
+                    <li>@person.sortName</li>
                 }
             </ul>
         </body>
