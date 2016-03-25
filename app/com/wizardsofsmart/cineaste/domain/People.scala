@@ -28,7 +28,7 @@ case class Group(uuid: String, name: String) extends People {
 object Group {
    implicit val groupReads: Reads[Group] = (
          (JsPath \ "uuid").read[String] and
-               (JsPath \ " name").read[String]
+               (JsPath \ "name").read[String]
          ) (Group.apply _)
 }
 
