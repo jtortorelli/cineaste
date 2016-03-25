@@ -34,19 +34,4 @@ object Person {
                (JsPath \ "showcase").read[Boolean]
          ) (Person.apply _)
 
-   implicit val personWrites = new Writes[Person] {
-      def writes(person: Person) = Json.obj(
-         "uuid" -> person.uuid,
-         "first_name" -> person.firstName,
-         "last_name" -> person.lastName,
-         "japanese_name" -> person.japaneseName,
-         "birth_name" -> person.birthName,
-         "dob" -> person.dob,
-         "dod" -> person.dod,
-         "aliases" -> person.aliases,
-         "birth_place" -> person.birthPlace,
-         "death_place" -> person.deathPlace,
-         "showcase" -> person.showcase
-      )
-   }
 }
