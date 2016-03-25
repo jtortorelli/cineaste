@@ -3,6 +3,8 @@ package com.wizardsofsmart.cineaste.domain
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
+sealed trait People
+
 case class Person(uuid: String,
                   firstName: String,
                   lastName: String,
@@ -13,7 +15,7 @@ case class Person(uuid: String,
                   aliases: Option[Seq[String]],
                   birthPlace: Option[String],
                   deathPlace: Option[String],
-                  showcase: Boolean)
+                  showcase: Boolean) extends People
 
 object Person {
    implicit val personReads: Reads[Person] = (
