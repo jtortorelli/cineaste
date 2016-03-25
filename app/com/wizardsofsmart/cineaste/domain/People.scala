@@ -5,6 +5,8 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
 sealed trait People
 
+case class Group(uuid: String, name: String) extends People
+
 case class Person(uuid: String,
                   firstName: String,
                   lastName: String,
