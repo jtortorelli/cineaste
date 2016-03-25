@@ -31,6 +31,10 @@ class Neo4jQueries @Inject()(ws: WSClient) {
       s"""match (n:Person)-[r:WORKED_ON {role: \"Actor\"}]->(m:Film {uuid: \"$uuid\"}) with n, r, m order by r.order, n.last_name match (n)-[r]->(m) with n as person, collect(r.character) as characters, collect(r.order) as orders order by head(orders), n.last_name return {person: person, characters: characters, orders: orders}"""
    }
 
+   def filmStudioQuery(uuid: String) = {
+      s"""match (n:Studio)-[r:PRODUCED]->(m:Film {uuid: \"$uuid\"}) return n order by r.order"""
+   }
+
    // Person queries
    def peopleQuery = {
       "match (n:Person) return n"

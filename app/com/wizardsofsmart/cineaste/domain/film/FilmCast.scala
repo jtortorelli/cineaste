@@ -1,5 +1,6 @@
-package com.wizardsofsmart.cineaste.domain
+package com.wizardsofsmart.cineaste.domain.film
 
+import com.wizardsofsmart.cineaste.domain.Person
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads}
 

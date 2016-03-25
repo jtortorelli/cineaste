@@ -1,8 +1,9 @@
-package com.wizardsofsmart.cineaste.domain
+package com.wizardsofsmart.cineaste.domain.film
 
 import java.util.Date
 
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
@@ -19,6 +20,11 @@ case class Film(
                ) {
    def releaseYear = {
       new DateTime(this.releaseDate).getYear
+   }
+
+   def displayReleaseDate = {
+      val formatter = DateTimeFormat.forPattern("MMMM d, yyyy")
+      formatter.print(new DateTime(this.releaseDate))
    }
 
    def sortTitle = {

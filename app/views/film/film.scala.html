@@ -1,6 +1,5 @@
-@import com.wizardsofsmart.cineaste.domain.{Film, FilmCast, FilmStaff}
-
-@(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast])
+@import com.wizardsofsmart.cineaste.domain.film.{Film, FilmCast, FilmStaff, FilmStudio}
+@(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio])
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,10 +9,21 @@
         @views.html.navbar()
         <h1>@film.title</h1>
         <p>This is the individual film page</p>
+            <!-- Aliases -->
         @if(film.aliases.isDefined) {
             <p>Also known as @film.aliases.get.mkString(", ")</p>
         }
+            <!-- Release Date -->
+        <p>Released @film.displayReleaseDate</p>
+            <!-- Studio -->
+        @defining(for(studio <- studios) yield studio.name) { studioNames =>
+            <p>Produced by @studioNames.mkString(", ")</p>
+        }
+            <!-- Duration -->
+        <p>Duration: @film.duration minutes</p>
         <hr/>
+
+            <!-- Staff -->
         <table>
             <thead>Staff</thead>
             @for(role <- staff) {
@@ -28,6 +38,8 @@
             }
         </table>
         <hr/>
+
+            <!-- Top Billed Cast -->
         <table>
             <thead>Cast</thead>
             @defining(cast.filter(_.orders.head < 99)) { billedCast =>
@@ -43,6 +55,8 @@
                 }
             }
         </table>
+
+            <!-- Uncredited Cast -->
         @defining(cast.filter(_.orders.head == 99)) { uncreditedCast =>
             @if(uncreditedCast.nonEmpty) {
                 <table>
