@@ -7,17 +7,15 @@ import org.joda.time.format.DateTimeFormat
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
-case class Film(
-                     uuid: String,
-                     japaneseTitleTransliteration: Option[String],
-                     showcase: Boolean,
-                     aliases: Option[Seq[String]],
-                     title: String,
-                     japaneseTitleTranslation: Option[String],
-                     japaneseTitleUnicode: Option[String],
-                     releaseDate: Date,
-                     duration: Int
-               ) {
+case class Film(uuid: String,
+                japaneseTitleTransliteration: Option[String],
+                showcase: Boolean,
+                aliases: Option[Seq[String]],
+                title: String,
+                japaneseTitleTranslation: Option[String],
+                japaneseTitleUnicode: Option[String],
+                releaseDate: Date,
+                duration: Int) {
    def releaseYear = {
       new DateTime(this.releaseDate).getYear
    }

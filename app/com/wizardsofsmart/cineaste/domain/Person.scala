@@ -3,19 +3,17 @@ package com.wizardsofsmart.cineaste.domain
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
-case class Person(
-                       uuid: String,
-                       firstName: String,
-                       lastName: String,
-                       japaneseName: Option[String],
-                       birthName: Option[String],
-                       dob: Option[String],
-                       dod: Option[String],
-                       aliases: Option[Seq[String]],
-                       birthPlace: Option[String],
-                       deathPlace: Option[String],
-                       showcase: Boolean
-                 )
+case class Person(uuid: String,
+                  firstName: String,
+                  lastName: String,
+                  japaneseName: Option[String],
+                  birthName: Option[String],
+                  dob: Option[String],
+                  dod: Option[String],
+                  aliases: Option[Seq[String]],
+                  birthPlace: Option[String],
+                  deathPlace: Option[String],
+                  showcase: Boolean)
 
 object Person {
    implicit val personReads: Reads[Person] = (
