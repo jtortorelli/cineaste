@@ -9,7 +9,12 @@
         @views.html.navbar()
         <h1>@film.title</h1>
         <p>This is the individual film page</p>
-            <!-- Aliases -->
+            <!-- Japanese Title -->
+        @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
+            <p>Original title: <i>@Html(film.japaneseTitleUnicode.get)</i></p>
+            <p>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</p>
+        }
+        <!-- Aliases -->
         @if(film.aliases.isDefined) {
             <p>Also known as @film.aliases.get.mkString(", ")</p>
         }
