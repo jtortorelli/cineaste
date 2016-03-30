@@ -32,7 +32,8 @@ class FilmRepository @Inject()(queries: Neo4jQueries) {
                queries.showcasedFilmQuery(uuid),
                queries.filmStaffQuery(uuid),
                queries.filmCastQuery(uuid),
-               queries.filmStudioQuery(uuid)))
+               queries.filmStudioQuery(uuid),
+               queries.filmSeriesQuery(uuid)))
                .toString()).map {
          response => Right(response)
       } recover {
