@@ -1,5 +1,5 @@
 @import com.wizardsofsmart.cineaste.domain.film.{Film, FilmCast, FilmSeries, FilmStaff, FilmStudio}
-@(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries])
+@(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries], synopsis: String)
 <!DOCTYPE html>
 <html>
     <head>
@@ -91,5 +91,7 @@
                 </table>
             }
         }
+        <hr/>
+        @Html(synopsis)
     </body>
 </html>

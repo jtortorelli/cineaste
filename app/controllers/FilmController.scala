@@ -23,7 +23,7 @@ class FilmController @Inject()(filmService: FilmService) extends Controller {
 
    def film(uuid: String) = Action.async {
       filmService.film(uuid).map {
-         case Right(response) => Ok(views.html.film.film(response._1, response._2, response._3, response._4, response._5))
+         case Right(response) => Ok(views.html.film.film(response._1, response._2, response._3, response._4, response._5, response._6))
          case Left(error) => error match {
             case e: Neo4jConnectionError => ServiceUnavailable(e.message)
             case e: EmptyResultsError => NotFound(e.message)
