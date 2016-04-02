@@ -32,4 +32,15 @@ class PersonController @Inject()(personService: PersonService) extends Controlle
       }
    }
 
+   def group(uuid: String) = Action.async {
+      personService.group(uuid).map {
+         case Right(response) => Ok(views.html.people.group(response))
+         case Left(error) => error match {
+            case e: Neo4jConnectionError => ServiceUnavailable(e.message)
+            case e: EmptyResultsError => NotFound(e.message)
+            case _ => InternalServerError
+         }
+      }
+   }
+
 }

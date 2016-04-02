@@ -52,4 +52,8 @@ class Neo4jQueries @Inject()(ws: WSClient) {
       s"""match (n:Group {showcase: true}) return n"""
    }
 
+   def showcasedGroupQuery(uuid: String) = {
+      s"""match (n:Group {uuid: \"$uuid\", showcase: true}) return n"""
+   }
+
 }

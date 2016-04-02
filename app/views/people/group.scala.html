@@ -1,0 +1,12 @@
+@import com.wizardsofsmart.cineaste.domain.Group
+@(group: Group)
+<!DOCTYPE html>
+    <html>
+        <head>
+            <title>@group.displayName - Godzilla Cineaste</title>
+        </head>
+        <body>
+            @views.html.navbar()
+            <h1>@group.displayName</h1>
+        </body>
+    </html>

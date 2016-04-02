@@ -37,4 +37,17 @@ class PersonService @Inject()(personRepository: PersonRepository) {
       }
    }
 
+   def group(uuid: String): Future[Either[DomainError, Group]] = {
+      personRepository.group(uuid).map {
+         case Right(response) =>
+            val groups = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Group]
+            if (groups.isEmpty) {
+               Left(new EmptyResultsError)
+            } else {
+               Right(groups(0))
+            }
+         case Left(error) => Left(error)
+      }
+   }
+
 }

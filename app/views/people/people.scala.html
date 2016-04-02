@@ -1,21 +1,25 @@
-@import com.wizardsofsmart.cineaste.domain.{People, Person, Group}
+@import com.wizardsofsmart.cineaste.domain.{Group, People, Person}
 @(people: Seq[People])
 <!DOCTYPE html>
-    <html>
-        <head>
-            <title>People - Godzilla Cineaste</title>
-        </head>
-        <body>
-            @views.html.navbar()
-            <h1>People</h1>
-            <p>This is the people page</p>
-            <ul>
-                @for(p <- people) {
-                    @p match {
-                        case p: Person => {<li>@p.sortName</li>}
-                        case p: Group => {<li>@p.displayName</li>}
-                    }
-                }
-            </ul>
-        </body>
-    </html>
+<html>
+    <head>
+        <title>People - Godzilla Cineaste</title>
+    </head>
+    <body>
+        @views.html.navbar()
+    <h1>People</h1>
+    <p>This is the people page</p>
+    <ul>
+    @for(p <- people) {
+        @p match {
+            case p: Person => {
+                <li>@p.sortName</li>
+            }
+            case p: Group => {
+                <li>@p.displayName</li>
+            }
+        }
+    }
+    </ul>
+    </body>
+</html>

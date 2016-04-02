@@ -12,6 +12,7 @@ GET        /films/:uuid                controllers.FilmController.film(uuid)
 # People
 GET        /people                     controllers.PersonController.people
 GET        /people/person/:uuid        controllers.PersonController.person(uuid)
+GET        /people/group/:uuid         controllers.PersonController.group(uuid)
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
