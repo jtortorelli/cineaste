@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import com.wizardsofsmart.cineaste.domain.Person
 import com.wizardsofsmart.cineaste.respository.PersonRepository
-import com.wizardsofsmart.cineaste.value.error.DomainError
+import com.wizardsofsmart.cineaste.value.error.{DomainError, EmptyResultsError}
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,6 +17,19 @@ class PersonService @Inject()(personRepository: PersonRepository) {
          case Right(response) =>
             val people = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Person]
             Right(people.sortBy(p => (p.lastName, p.firstName)))
+         case Left(error) => Left(error)
+      }
+   }
+
+   def person(uuid: String): Future[Either[DomainError, Person]] = {
+      personRepository.person(uuid).map {
+         case Right(response) =>
+            val persons = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Person]
+            if (persons.isEmpty) {
+               Left(new EmptyResultsError)
+            } else {
+               Right(persons(0))
+            }
          case Left(error) => Left(error)
       }
    }

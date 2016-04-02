@@ -26,5 +26,18 @@ class PersonRepository @Inject()(queries: Neo4jQueries) {
       }
    }
 
+   def person(uuid: String) = {
+      queries.statementRequest.post(
+         Json.toJson(
+            Neo4jStatement.createStatement(
+               queries.showcasedPersonQuery(uuid)
+            )
+         ).toString()).map {
+         response => Right(response)
+      } recover {
+         case _: ConnectException => Left(new Neo4jConnectionError)
+      }
+   }
+
 
 }
