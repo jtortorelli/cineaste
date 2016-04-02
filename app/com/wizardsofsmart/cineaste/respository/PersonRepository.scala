@@ -16,8 +16,9 @@ class PersonRepository @Inject()(queries: Neo4jQueries) {
    def people = {
       queries.statementRequest.post(
          Json.toJson(
-            Neo4jStatement.createStatement(
-               queries.showcasedPeopleQuery
+            Neo4jStatement.createStatements(
+               queries.showcasedPeopleQuery,
+               queries.showcasedGroupsQuery
             )
          ).toString()).map {
          response => Right(response)

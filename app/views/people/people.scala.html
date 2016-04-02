@@ -1,5 +1,5 @@
-@import com.wizardsofsmart.cineaste.domain.Person
-@(people: Seq[Person])
+@import com.wizardsofsmart.cineaste.domain.{People, Person, Group}
+@(people: Seq[People])
 <!DOCTYPE html>
     <html>
         <head>
@@ -10,8 +10,11 @@
             <h1>People</h1>
             <p>This is the people page</p>
             <ul>
-                @for(person <- people) {
-                    <li>@person.sortName</li>
+                @for(p <- people) {
+                    @p match {
+                        case p: Person => {<li>@p.sortName</li>}
+                        case p: Group => {<li>@p.displayName</li>}
+                    }
                 }
             </ul>
         </body>
