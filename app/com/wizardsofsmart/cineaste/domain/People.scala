@@ -14,7 +14,7 @@ object People {
    }
 }
 
-case class Group(uuid: String, name: String) extends People {
+case class Group(uuid: String, name: String, showcase: Boolean) extends People {
    override val displayName: String = this.name
    override val sortName: String = {
       if (this.name.startsWith("The ")) {
@@ -28,7 +28,8 @@ case class Group(uuid: String, name: String) extends People {
 object Group {
    implicit val groupReads: Reads[Group] = (
          (JsPath \ "uuid").read[String] and
-               (JsPath \ "name").read[String]
+               (JsPath \ "name").read[String] and
+               (JsPath \ "showcase").read[Boolean]
          ) (Group.apply _)
 }
 
