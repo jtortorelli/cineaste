@@ -1,71 +1,83 @@
 @import com.wizardsofsmart.cineaste.domain.film.{Film, FilmCast, FilmSeries, FilmStaff, FilmStudio}
 @(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries], synopsis: String)
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>@film.title - Godzilla Cineaste</title>
-        @views.html.partials.bootstrap()
-    </head>
-    <body>
-        @views.html.partials.navbar()
-        <h1>@film.title</h1>
-        <p>This is the individual film page</p>
-            <!-- Japanese Title -->
-        @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
-            <p>Original title: <i>@Html(film.japaneseTitleUnicode.get)</i></p>
-            <p>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</p>
-        }
-            <!-- Aliases -->
-        @if(film.aliases.isDefined) {
-            <p>Also known as @film.aliases.get.mkString(", ")</p>
-        }
-            <!-- Release Date -->
-        <p>Released @film.displayReleaseDate</p>
-            <!-- Studio -->
-        @defining(for(studio <- studios) yield studio.name) { studioNames =>
-            <p>Produced by @studioNames.mkString(", ")</p>
-        }
-            <!-- Duration -->
-        <p>Duration: @film.duration minutes</p>
+@views.html.layout.base(Some(film.title)) {
+    <h1>@film.title</h1>
+    <p>This is the individual film page</p>
+        <!-- Japanese Title -->
+    @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
+        <p>Original title: <i>@Html(film.japaneseTitleUnicode.get)</i></p>
+        <p>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</p>
+    }
+        <!-- Aliases -->
+    @if(film.aliases.isDefined) {
+        <p>Also known as @film.aliases.get.mkString(", ")</p>
+    }
+        <!-- Release Date -->
+    <p>Released @film.displayReleaseDate</p>
+        <!-- Studio -->
+    @defining(for(studio <- studios) yield studio.name) { studioNames =>
+        <p>Produced by @studioNames.mkString(", ")</p>
+    }
+        <!-- Duration -->
+    <p>Duration: @film.duration minutes</p>
 
-            <!-- Series -->
-        @if(series.isDefined) {
-            @if(series.get.precedent.isDefined) {
-                <p>Preceded by @series.get.precedent.get.title</p>
-            }
-            @if(series.get.antecedent.isDefined) {
-                <p>Followed by @series.get.antecedent.get.title</p>
-            }
+        <!-- Series -->
+    @if(series.isDefined) {
+        @if(series.get.precedent.isDefined) {
+            <p>Preceded by @series.get.precedent.get.title</p>
         }
+        @if(series.get.antecedent.isDefined) {
+            <p>Followed by @series.get.antecedent.get.title</p>
+        }
+    }
 
-        <hr/>
+    <hr/>
         <!-- Synopsis modal button -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#synopsis-modal">
-            View Synopsis
-        </button>
-        <hr/>
+    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#synopsis-modal">
+        View spoilerific synopsis
+    </button>
+    <hr/>
 
-            <!-- Staff -->
-        <table>
-            <thead>Staff</thead>
-            @for(role <- staff) {
+        <!-- Staff -->
+    <table>
+        <thead>Staff</thead>
+        @for(role <- staff) {
+            <tr>
+                <td style="vertical-align : top">@role.role</td>
+                <td>
+                @for(person <- role.people) {
+                    @person.displayName <br/>
+                }
+                </td>
+            </tr>
+        }
+    </table>
+    <hr/>
+
+        <!-- Top Billed Cast -->
+    <table>
+        <thead>Cast</thead>
+        @defining(cast.filter(_.orders.head < 99)) { billedCast =>
+            @for(member <- billedCast) {
                 <tr>
-                    <td style="vertical-align : top">@role.role</td>
+                    <td style="vertical-align : top">@member.people.displayName</td>
                     <td>
-                    @for(person <- role.people) {
-                        @person.displayName <br/>
+                    @for(character <- member.characters) {
+                        @character <br/>
                     }
                     </td>
                 </tr>
             }
-        </table>
-        <hr/>
+        }
+    </table>
 
-            <!-- Top Billed Cast -->
-        <table>
-            <thead>Cast</thead>
-            @defining(cast.filter(_.orders.head < 99)) { billedCast =>
-                @for(member <- billedCast) {
+        <!-- Uncredited Cast -->
+    @defining(cast.filter(_.orders.head == 99)) { uncreditedCast =>
+        @if(uncreditedCast.nonEmpty) {
+            <table>
+
+                <thead>Uncredited Cast</thead>
+                @for(member <- uncreditedCast) {
                     <tr>
                         <td style="vertical-align : top">@member.people.displayName</td>
                         <td>
@@ -75,41 +87,21 @@
                         </td>
                     </tr>
                 }
-            }
-        </table>
-
-            <!-- Uncredited Cast -->
-        @defining(cast.filter(_.orders.head == 99)) { uncreditedCast =>
-            @if(uncreditedCast.nonEmpty) {
-                <table>
-
-                    <thead>Uncredited Cast</thead>
-                    @for(member <- uncreditedCast) {
-                        <tr>
-                            <td style="vertical-align : top">@member.people.displayName</td>
-                            <td>
-                            @for(character <- member.characters) {
-                                @character <br/>
-                            }
-                            </td>
-                        </tr>
-                    }
-                </table>
-            }
+            </table>
         }
-        <hr/>
+    }
+    <hr/>
         <!-- Synopsis modal content -->
-        <div class="modal fade" id="synopsis-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Synopsis</h4>
-                    </div>
-                    <div class="modal-body">
-                        @Html(synopsis)
-                    </div>
+    <div class="modal fade" id="synopsis-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Synopsis</h4>
+                </div>
+                <div class="modal-body">
+                @Html(synopsis)
                 </div>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+}

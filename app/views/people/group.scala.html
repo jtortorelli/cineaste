@@ -1,13 +1,5 @@
 @import com.wizardsofsmart.cineaste.domain.Group
 @(group: Group)
-<!DOCTYPE html>
-    <html>
-        <head>
-            <title>@group.displayName - Godzilla Cineaste</title>
-            @views.html.partials.bootstrap()
-        </head>
-        <body>
-            @views.html.partials.navbar()
-            <h1>@group.displayName</h1>
-        </body>
-    </html>
+@views.html.layout.base(Some(group.displayName)) {
+    <h1>@group.displayName</h1>
+}

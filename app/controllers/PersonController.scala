@@ -15,8 +15,8 @@ class PersonController @Inject()(personService: PersonService) extends Controlle
       personService.people.map {
          case Right(response) => Ok(views.html.people.people(response))
          case Left(error) => error match {
-            case e: Neo4jConnectionError => ServiceUnavailable(e.message)
-            case _ => InternalServerError
+            case e: Neo4jConnectionError => ServiceUnavailable(views.html.errors.serviceUnavailable(e.message))
+            case _ => InternalServerError(views.html.errors.internalServerError())
          }
       }
    }
@@ -25,9 +25,9 @@ class PersonController @Inject()(personService: PersonService) extends Controlle
       personService.person(uuid).map {
          case Right(response) => Ok(views.html.people.person(response))
          case Left(error) => error match {
-            case e: Neo4jConnectionError => ServiceUnavailable(e.message)
-            case e: EmptyResultsError => NotFound(e.message)
-            case _ => InternalServerError
+            case e: Neo4jConnectionError => ServiceUnavailable(views.html.errors.serviceUnavailable(e.message))
+            case e: EmptyResultsError => NotFound(views.html.errors.notFound(e.message))
+            case _ => InternalServerError(views.html.errors.internalServerError())
          }
       }
    }
@@ -36,9 +36,9 @@ class PersonController @Inject()(personService: PersonService) extends Controlle
       personService.group(uuid).map {
          case Right(response) => Ok(views.html.people.group(response))
          case Left(error) => error match {
-            case e: Neo4jConnectionError => ServiceUnavailable(e.message)
-            case e: EmptyResultsError => NotFound(e.message)
-            case _ => InternalServerError
+            case e: Neo4jConnectionError => ServiceUnavailable(views.html.errors.serviceUnavailable(e.message))
+            case e: EmptyResultsError => NotFound(views.html.errors.notFound(e.message))
+            case _ => InternalServerError(views.html.errors.internalServerError())
          }
       }
    }

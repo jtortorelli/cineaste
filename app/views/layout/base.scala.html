@@ -1,0 +1,15 @@
+@(title: Option[String])(content: Html)
+<!DOCTYPE html>
+<html>
+    <head>
+        @title match {
+            case Some(t) => {<title>@t - Godzilla Cineaste</title>}
+            case None => {<title>Godzilla Cineaste</title>}
+        }
+        @views.html.partials.bootstrap()
+    </head>
+    <body>
+        @views.html.partials.navbar()
+        @content
+    </body>
+</html>

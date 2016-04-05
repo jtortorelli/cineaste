@@ -1,20 +1,11 @@
 @import com.wizardsofsmart.cineaste.domain.film.Film
 @(films: Seq[Film])
-
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Films - Godzilla Cineaste</title>
-        @views.html.partials.bootstrap()
-    </head>
-    <body>
-        @views.html.partials.navbar()
-        <h1>Films</h1>
-        <p>This is where the films go.</p>
-        <ul>
-            @for(film <- films) {
-                <li><a href="@(routes.FilmController.film(film.uuid))">@film.title (@film.releaseYear)</a></li>
-            }
-        </ul>
-    </body>
-</html>
+@views.html.layout.base(Some("Films")) {
+    <h1>Films</h1>
+    <p>This is where the films go.</p>
+    <ul>
+    @for(film <- films) {
+        <li><a href="@(routes.FilmController.film(film.uuid))">@film.title (@film.releaseYear)</a></li>
+    }
+    </ul>
+}

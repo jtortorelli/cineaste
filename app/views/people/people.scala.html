@@ -1,13 +1,6 @@
 @import com.wizardsofsmart.cineaste.domain.{Group, People, Person}
 @(people: Seq[People])
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>People - Godzilla Cineaste</title>
-        @views.html.partials.bootstrap()
-    </head>
-    <body>
-        @views.html.partials.navbar()
+@views.html.layout.base(Some("People")) {
     <h1>People</h1>
     <p>This is the people page</p>
     <ul>
@@ -22,5 +15,4 @@
         }
     }
     </ul>
-    </body>
-</html>
+}
