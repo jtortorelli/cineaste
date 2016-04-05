@@ -3,6 +3,10 @@
 @views.html.layout.base(Some(film.title)) {
     <h1>@film.title</h1>
     <p>This is the individual film page</p>
+
+        <!-- Poster -->
+        <img style="height: 400px; width: 270px;" src="@routes.Assets.versioned("images/posters/" + film.uuid + ".jpg")">
+
         <!-- Japanese Title -->
     @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
         <p>Original title: <i>@Html(film.japaneseTitleUnicode.get)</i></p>
