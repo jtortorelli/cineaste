@@ -16,16 +16,14 @@ case class Film(uuid: String,
                 japaneseTitleUnicode: Option[String],
                 releaseDate: Date,
                 duration: Int) {
-   def releaseYear = {
-      new DateTime(this.releaseDate).getYear
-   }
+   val releaseYear = new DateTime(this.releaseDate).getYear
 
-   def displayReleaseDate = {
+   val displayReleaseDate = {
       val formatter = DateTimeFormat.forPattern("MMMM d, yyyy")
       formatter.print(new DateTime(this.releaseDate))
    }
 
-   def sortTitle = {
+   val sortTitle = {
       if (this.title.startsWith("The ")) {
          "The ".r replaceFirstIn(this.title, "")
       } else {

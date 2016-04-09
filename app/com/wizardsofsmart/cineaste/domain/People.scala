@@ -1,5 +1,6 @@
 package com.wizardsofsmart.cineaste.domain
 
+import org.joda.time.{DateTime, Period}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads, __}
 
@@ -46,6 +47,35 @@ case class Person(uuid: String,
                   showcase: Boolean) extends People {
    override val displayName: String = s"${this.firstName} ${this.lastName}"
    override val sortName: String = s"${this.lastName}, ${this.firstName}"
+
+   val age: Option[Int] = {
+      if (dob.isDefined && dob.get != "unknown") {
+         if (dod.isEmpty) {
+            try {
+               val jodaDob = new DateTime(dob)
+               val currentDate = new DateTime()
+               val period = new Period(jodaDob, currentDate)
+               Some(period.getYears)
+            } catch {
+               case _: Throwable => None
+            }
+         } else if (dod.isDefined && dod.get != "unknown") {
+            try {
+               val jodaDob = new DateTime(dob)
+               val jodaDod = new DateTime(dod)
+               val period = new Period(jodaDob, jodaDod)
+               Some(period.getYears)
+            } catch {
+               case _: Throwable => None
+            }
+         } else {
+            None
+         }
+      } else {
+         None
+      }
+   }
+
 }
 
 object Person {
