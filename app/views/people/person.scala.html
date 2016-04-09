@@ -2,18 +2,20 @@
 @(person: Person)
 
 @biographicalInfo(person: Person) = @{
+    val age = person.age.map("(" + _ + ")").getOrElse("")
+    val deathPlace = person.deathPlace.map("<br/>" + _).getOrElse("")
+    val birthPlace = person.birthPlace.map("<br/>" + _).getOrElse("")
+    val birthName = person.birthName.map(_ + "<br/>").getOrElse("")
     if (person.dob.isDefined) {
         if (person.dob.get == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
-            s"<p>Birth Date: Unknown</p><p>Death Date: ${person.dod.get}</p>"
+            s"<p>Born: Unknown</p><p>Died: ${person.dod.get} $deathPlace</p>"
         } else if (person.dob.get != "unknown") {
             if (person.dod.isEmpty) {
-                val age = person.age.map("(" + _ + ")").getOrElse("")
-                s"<p>Birth Date: ${person.dob.get} $age</p>"
+                s"<p>Born: $birthName ${person.dob.get} $age $birthPlace</p>"
             } else if (person.dod.get == "unknown") {
-                s"<p>Birth Date: ${person.dob.get}</p><p>Death Date: Unknown</p>"
+                s"<p>Born: $birthName ${person.dob.get} $birthPlace</p><p>Died: Unknown</p>"
             } else {
-                val age = person.age.map("(" + _ + ")").getOrElse("")
-                s"<p>Birth Date: ${person.dob.get}</p><p>Death Date: ${person.dod.get} $age</p>"
+                s"<p>Born: $birthName ${person.dob.get} $birthPlace</p><p>Died: ${person.dod.get} $age $deathPlace</p>"
             }
         } else {
             ""
