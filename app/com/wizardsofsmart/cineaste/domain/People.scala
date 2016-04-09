@@ -1,5 +1,6 @@
 package com.wizardsofsmart.cineaste.domain
 
+import org.joda.time.format.DateTimeFormat
 import org.joda.time.{DateTime, Period}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads, __}
@@ -52,7 +53,7 @@ case class Person(uuid: String,
       if (dob.isDefined && dob.get != "unknown") {
          if (dod.isEmpty) {
             try {
-               val jodaDob = new DateTime(dob)
+               val jodaDob = new DateTime(dob.get)
                val currentDate = new DateTime()
                val period = new Period(jodaDob, currentDate)
                Some(period.getYears)
@@ -61,8 +62,8 @@ case class Person(uuid: String,
             }
          } else if (dod.isDefined && dod.get != "unknown") {
             try {
-               val jodaDob = new DateTime(dob)
-               val jodaDod = new DateTime(dod)
+               val jodaDob = new DateTime(dob.get)
+               val jodaDod = new DateTime(dod.get)
                val period = new Period(jodaDob, jodaDod)
                Some(period.getYears)
             } catch {
