@@ -1,4 +1,5 @@
 @import com.wizardsofsmart.cineaste.domain.Person
+@import com.wizardsofsmart.cineaste.util.DateUtil._
 @(person: Person)
 
 @biographicalInfo(person: Person) = @{
@@ -8,14 +9,14 @@
     val birthName = person.birthName.map(_ + "<br/>").getOrElse("")
     if (person.dob.isDefined) {
         if (person.dob.get == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
-            s"<p>Born: Unknown</p><p>Died: ${person.dod.get} $deathPlace</p>"
+            s"<p>Born: Unknown</p><p>Died: ${prettyPrintDate(person.dod.get).getOrElse("")} $deathPlace</p>"
         } else if (person.dob.get != "unknown") {
             if (person.dod.isEmpty) {
-                s"<p>Born: $birthName ${person.dob.get} $age $birthPlace</p>"
+                s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $age $birthPlace</p>"
             } else if (person.dod.get == "unknown") {
-                s"<p>Born: $birthName ${person.dob.get} $birthPlace</p><p>Died: Unknown</p>"
+                s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $birthPlace</p><p>Died: Unknown</p>"
             } else {
-                s"<p>Born: $birthName ${person.dob.get} $birthPlace</p><p>Died: ${person.dod.get} $age $deathPlace</p>"
+                s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $birthPlace</p><p>Died: ${prettyPrintDate(person.dod.get).getOrElse("")} $age $deathPlace</p>"
             }
         } else {
             ""
