@@ -5,7 +5,7 @@
     <p>This is the individual film page</p>
 
         <!-- Poster -->
-        <img style="height: 400px; width: 270px;" src="@routes.Assets.versioned("images/posters/" + film.uuid + ".jpg")">
+        <img height="400" width="270" src="@routes.Assets.versioned("images/posters/" + film.uuid + ".jpg")">
 
         <!-- Japanese Title -->
     @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
