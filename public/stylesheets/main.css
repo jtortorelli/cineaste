@@ -1,3 +1,33 @@
+@font-face {
+    font-family: 'phosphateinline';
+    src: url('/assets/fonts/phosphate-inline/phosphate-inline-webfont.eot');
+    src: url('/assets/fonts/phosphate-inline/phosphate-inline-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/assets/fonts/phosphate-inline/phosphate-inline-webfont.woff2') format('woff2'),
+    url('/assets/fonts/phosphate-inline/phosphate-inline-webfont.woff') format('woff'),
+    url('/assets/fonts/phosphate-inline/phosphate-inline-webfont.ttf') format('truetype'),
+    url('/assets/fonts/phosphate-inline/phosphate-inline-webfont.svg#phosphateinline') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'phosphatesolid';
+    src: url('/assets/fonts/phosphate-solid/phosphate-solid-webfont.eot');
+    src: url('/assets/fonts/phosphate-solid/phosphate-solid-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/assets/fonts/phosphate-solid/phosphate-solid-webfont.woff2') format('woff2'),
+    url('/assets/fonts/phosphate-solid/phosphate-solid-webfont.woff') format('woff'),
+    url('/assets/fonts/phosphate-solid/phosphate-solid-webfont.ttf') format('truetype'),
+    url('/assets/fonts/phosphate-solid/phosphate-solid-webfont.svg#phosphatesolid') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 body {
     padding-top: 50px;
+}
+
+h1, h2 {
+    font-family: phosphateinline;
 }
