@@ -1,19 +1,19 @@
-@import com.wizardsofsmart.cineaste.domain.Person
+@import com.wizardsofsmart.cineaste.domain.people.{Person, PersonStaffRole}
 @import com.wizardsofsmart.cineaste.util.DateUtil._
-@(person: Person)
+@(person: Person, staffRoles: Seq[PersonStaffRole])
 
 @biographicalInfo(person: Person) = @{
     val age = person.age.map("(" + _ + ")").getOrElse("")
     val deathPlace = person.deathPlace.map("<br/>" + _).getOrElse("")
     val birthPlace = person.birthPlace.map("<br/>" + _).getOrElse("")
     val birthName = person.birthName.map(_ + "<br/>").getOrElse("")
-    if (person.dob.isDefined) {
-        if (person.dob.get == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
+    if(person.dob.isDefined) {
+        if(person.dob.get == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
             s"<p>Born: Unknown</p><p>Died: ${prettyPrintDate(person.dod.get).getOrElse("")} $deathPlace</p>"
-        } else if (person.dob.get != "unknown") {
-            if (person.dod.isEmpty) {
+        } else if(person.dob.get != "unknown") {
+            if(person.dod.isEmpty) {
                 s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $age $birthPlace</p>"
-            } else if (person.dod.get == "unknown") {
+            } else if(person.dod.get == "unknown") {
                 s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $birthPlace</p><p>Died: Unknown</p>"
             } else {
                 s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $birthPlace</p><p>Died: ${prettyPrintDate(person.dod.get).getOrElse("")} $age $deathPlace</p>"
@@ -35,5 +35,19 @@
         <p>Also known as @Html(person.aliases.get.mkString(", "))</p>
     }
 
+    <h3>Bio</h3>
     @Html(biographicalInfo(person))
+    <h3>Selected Filmography</h3>
+    @for(staffRole <- staffRoles.sortBy(_.role)) {
+        <p>
+            <table>
+                <thead><strong>@staffRole.role (@staffRole.films.size)</strong></thead>
+                    @for(film <- staffRole.films.sortBy(_.releaseDate)) {
+                        <tr>
+                            <td><i>@film.title</i> (@film.releaseYear)</td>
+                        </tr>
+                    }
+            </table>
+        </p>
+    }
 }

@@ -32,8 +32,9 @@ class PersonRepository @Inject()(queries: Neo4jQueries) {
    def person(uuid: String): Future[Either[DomainError, WSResponse]] = {
       queries.statementRequest.post(
          Json.toJson(
-            Neo4jStatement.createStatement(
-               queries.showcasedPersonQuery(uuid)
+            Neo4jStatement.createStatements(
+               queries.showcasedPersonQuery(uuid),
+               queries.personStaffCreditsQuery(uuid)
             )
          ).toString()).map {
          response => Right(response)

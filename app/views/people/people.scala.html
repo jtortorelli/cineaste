@@ -1,4 +1,6 @@
-@import com.wizardsofsmart.cineaste.domain.{Group, People, Person}
+@import com.wizardsofsmart.cineaste.domain.people.Person
+@import com.wizardsofsmart.cineaste.domain.people.People
+@import com.wizardsofsmart.cineaste.domain.people.Group
 @(people: Seq[People])
 @views.html.layout.base(Some("People")) {
     <h1>People</h1>

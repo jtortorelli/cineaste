@@ -1,6 +1,5 @@
-package com.wizardsofsmart.cineaste.domain
+package com.wizardsofsmart.cineaste.domain.people
 
-import org.joda.time.format.DateTimeFormat
 import org.joda.time.{DateTime, Period}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads, __}
