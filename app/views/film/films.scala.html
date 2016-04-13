@@ -5,7 +5,7 @@
     <p>This is where the films go.</p>
     <ul>
     @for(film <- films) {
-        <li><a href="@(routes.FilmController.film(film.uuid))">@film.title (@film.releaseYear)</a></li>
+        <li><a href="@(routes.FilmController.film(film.uuid))"><i>@film.title</i> (@film.releaseYear)</a></li>
     }
     </ul>
 }
