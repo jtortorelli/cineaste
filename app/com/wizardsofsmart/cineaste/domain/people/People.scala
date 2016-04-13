@@ -7,6 +7,7 @@ import play.api.libs.json.{JsPath, Reads, __}
 sealed trait People {
    val displayName: String
    val sortName: String
+   val showcase: Boolean
 }
 
 object People {

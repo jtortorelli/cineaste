@@ -1,4 +1,5 @@
 @import com.wizardsofsmart.cineaste.domain.film.{Film, FilmCast, FilmSeries, FilmStaff, FilmStudio}
+@import com.wizardsofsmart.cineaste.domain.people.{Person, Group}
 @(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries], synopsis: String)
 @views.html.layout.base(Some(film.title)) {
     <h1>@film.title</h1>
@@ -50,7 +51,18 @@
                 <td style="vertical-align : top">@role.role</td>
                 <td>
                 @for(person <- role.people) {
-                    @person.displayName <br/>
+                    @if(person.showcase) {
+                        @person match {
+                            case p: Person => {
+                                <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a> <br/>
+                            }
+                            case g: Group => {
+                                <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a> <br/>
+                            }
+                        }
+                    } else {
+                        @person.displayName <br/>
+                    }
                 }
                 </td>
             </tr>
@@ -64,7 +76,20 @@
         @defining(cast.filter(_.orders.head < 99)) { billedCast =>
             @for(member <- billedCast) {
                 <tr>
-                    <td style="vertical-align : top">@member.people.displayName</td>
+                    <td style="vertical-align : top">
+                        @if(member.people.showcase) {
+                            @member.people match {
+                                case p: Person => {
+                                    <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a>
+                                }
+                                case g: Group => {
+                                    <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a>
+                                }
+                            }
+                        } else {
+                            @member.people.displayName
+                        }
+                    </td>
                     <td>
                     @for(character <- member.characters) {
                         @character <br/>
@@ -83,7 +108,20 @@
                 <thead>Uncredited Cast</thead>
                 @for(member <- uncreditedCast) {
                     <tr>
-                        <td style="vertical-align : top">@member.people.displayName</td>
+                        <td style="vertical-align : top">
+                        @if(member.people.showcase) {
+                            @member.people match {
+                                case p: Person => {
+                                    <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a>
+                                }
+                                case g: Group => {
+                                    <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a>
+                                }
+                            }
+                        } else {
+                            @member.people.displayName
+                        }
+                        </td>
                         <td>
                         @for(character <- member.characters) {
                             @character <br/>
