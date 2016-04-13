@@ -3,50 +3,68 @@
 @(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries], synopsis: String)
 @views.html.layout.base(Some(film.title)) {
     <h1>@film.title</h1>
-    <p>This is the individual film page</p>
 
+    <div id="poster">
         <!-- Poster -->
         <img height="400" width="270" src="@routes.Assets.versioned("images/posters/" + film.uuid + ".jpg")">
+    </div>
 
-        <!-- Japanese Title -->
-    @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
-        <p>Original title: <i>@Html(film.japaneseTitleUnicode.get)</i></p>
-        <p>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</p>
-    }
-        <!-- Aliases -->
-    @if(film.aliases.isDefined) {
-        <p>Also known as @film.aliases.get.mkString(", ")</p>
-    }
-        <!-- Release Date -->
-    <p>Released @film.displayReleaseDate</p>
-        <!-- Studio -->
-    @defining(for(studio <- studios) yield studio.name) { studioNames =>
-        <p>Produced by @studioNames.mkString(", ")</p>
-    }
-        <!-- Duration -->
-    <p>Duration: @film.duration minutes</p>
-
-        <!-- Series -->
-    @if(series.isDefined) {
-        @if(series.get.precedent.isDefined) {
-            @defining(series.get.precedent.get) { precedent =>
-                @if(precedent.showcase) {
-                    <p>Preceded by <a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></p>
-                } else {
-                    <p>Preceded by <i>@series.get.precedent.get.title</i></p>
+    <div id="overview">
+        <table class="table table-condensed table-striped">
+            @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
+                <tr>
+                    <td>Original Title</td>
+                    <td><i>@Html(film.japaneseTitleUnicode.get)</i> (<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</td>
+                </tr>
+            }
+            @if(film.aliases.isDefined) {
+                <tr>
+                    <td>Also known as</td>
+                    <td>@Html(film.aliases.get.mkString("<i>", "</i><br/><i>", "</i>"))</td>
+                </tr>
+            }
+            <tr>
+                <td>Release Date</td>
+                <td>@film.displayReleaseDate</td>
+            </tr>
+            @defining(for(studio <- studios) yield studio.name) { studioNames =>
+                <tr>
+                    <td>Produced by</td>
+                    <td>@Html(studioNames.mkString("<br/>"))</td>
+                </tr>
+            }
+            <tr>
+                <td>Runtime</td>
+                <td>@film.duration minutes</td>
+            </tr>
+            @if(series.isDefined) {
+                @if(series.get.precedent.isDefined) {
+                    @defining(series.get.precedent.get) { precedent =>
+                        <tr>
+                            <td>Preceded by</td>
+                            @if(precedent.showcase) {
+                                <td><a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></td>
+                            } else {
+                                <td>Preceded by <i>@series.get.precedent.get.title</i></td>
+                            }
+                        </tr>
+                    }
+                }
+            @if(series.get.antecedent.isDefined) {
+                @defining(series.get.antecedent.get) { antecedent =>
+                    <tr>
+                        <td>Followed by</td>
+                        @if(antecedent.showcase) {
+                            <td><a href="@routes.FilmController.film(antecedent.uuid)"><i>@series.get.antecedent.get.title</i></a></td>
+                        } else {
+                            <td><i>@series.get.antecedent.get.title</i></td>
+                        }
+                    </tr>
                 }
             }
-        }
-        @if(series.get.antecedent.isDefined) {
-            @defining(series.get.antecedent.get) { antecedent =>
-                @if(antecedent.showcase) {
-                    <p>Followed by <a href="@routes.FilmController.film(antecedent.uuid)"><i>@series.get.antecedent.get.title</i></a></p>
-                } else {
-                    <p>Followed by <i>@series.get.antecedent.get.title</i></p>
-                }
-            }
-        }
+        </table>
     }
+    </div>
 
     <hr/>
         <!-- Synopsis modal button -->
@@ -55,6 +73,7 @@
     </button>
     <hr/>
 
+    <div id="staff">
         <!-- Staff -->
     <table>
         <thead>Staff</thead>
@@ -81,7 +100,9 @@
         }
     </table>
     <hr/>
+    </div>
 
+    <div id="cast">
         <!-- Top Billed Cast -->
     <table>
         <thead>Cast</thead>
@@ -144,6 +165,7 @@
             </table>
         }
     }
+    </div>
     <hr/>
         <!-- Synopsis modal content -->
     <div class="modal fade" id="synopsis-modal" tabindex="-1" role="dialog">
