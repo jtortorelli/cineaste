@@ -29,10 +29,22 @@
         <!-- Series -->
     @if(series.isDefined) {
         @if(series.get.precedent.isDefined) {
-            <p>Preceded by @series.get.precedent.get.title</p>
+            @defining(series.get.precedent.get) { precedent =>
+                @if(precedent.showcase) {
+                    <p>Preceded by <a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></p>
+                } else {
+                    <p>Preceded by <i>@series.get.precedent.get.title</i></p>
+                }
+            }
         }
         @if(series.get.antecedent.isDefined) {
-            <p>Followed by @series.get.antecedent.get.title</p>
+            @defining(series.get.antecedent.get) { antecedent =>
+                @if(antecedent.showcase) {
+                    <p>Followed by <a href="@routes.FilmController.film(antecedent.uuid)"><i>@series.get.antecedent.get.title</i></a></p>
+                } else {
+                    <p>Followed by <i>@series.get.antecedent.get.title</i></p>
+                }
+            }
         }
     }
 
