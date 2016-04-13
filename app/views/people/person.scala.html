@@ -38,16 +38,23 @@
     <h3>Bio</h3>
     @Html(biographicalInfo(person))
     <h3>Selected Filmography</h3>
-    @for(staffRole <- staffRoles.sortBy(_.role)) {
-        <p>
-            <table>
-                <thead><strong>@staffRole.role (@staffRole.films.size)</strong></thead>
+    @if(staffRoles.nonEmpty) {
+        @for(staffRole <- staffRoles.sortBy(_.role)) {
+            @defining(staffRole.role.replaceAll(" ", "")) { id =>
+                <p>
+                    <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
+                        <strong>@staffRole.role (@staffRole.films.size)</strong>
+                    </a>
+
+                </p>
+                <div id="collapse@id" class="collapse">
+                    <ul>
                     @for(film <- staffRole.films.sortBy(_.releaseDate)) {
-                        <tr>
-                            <td><i>@film.title</i> (@film.releaseYear)</td>
-                        </tr>
+                        <li><i>@film.title</i> (@film.releaseYear)</li>
                     }
-            </table>
-        </p>
+                    </ul>
+                </div>
+            }
+        }
     }
 }
