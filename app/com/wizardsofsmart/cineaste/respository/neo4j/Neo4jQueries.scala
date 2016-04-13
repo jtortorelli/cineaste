@@ -60,4 +60,8 @@ class Neo4jQueries @Inject()(ws: WSClient) {
       s"""match (n:Person {uuid: \"$uuid\"})-[r:WORKED_ON]->(m:Film) where r.role <> \"Actor\" with distinct r.role as role, collect(m) as films return {role: role, films: films}"""
    }
 
+   def personCastCreditsQuery(uuid: String) = {
+      s"""match (n:Person {uuid: \"$uuid\"})-[r:WORKED_ON {role: \"Actor\"}]->(m:Film) with distinct m as film, collect(r.character) as characters return {film: film, characters: characters}"""
+   }
+
 }

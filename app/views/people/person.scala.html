@@ -1,6 +1,6 @@
-@import com.wizardsofsmart.cineaste.domain.people.{Person, PersonStaffRole}
+@import com.wizardsofsmart.cineaste.domain.people.{Person, PersonStaffRole, Role, PersonCastRole}
 @import com.wizardsofsmart.cineaste.util.DateUtil._
-@(person: Person, staffRoles: Seq[PersonStaffRole])
+@(person: Person, roles: Seq[Role])
 
 @biographicalInfo(person: Person) = @{
     val age = person.age.map("(" + _ + ")").getOrElse("")
@@ -37,23 +37,43 @@
 
     <h3>Bio</h3>
     @Html(biographicalInfo(person))
-    <h3>Selected Filmography</h3>
-    @if(staffRoles.nonEmpty) {
-        @for(staffRole <- staffRoles.sortBy(_.role)) {
-            @defining(staffRole.role.replaceAll(" ", "")) { id =>
-                <p>
-                    <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
-                        <strong>@staffRole.role (@staffRole.films.size)</strong>
-                    </a>
 
-                </p>
-                <div id="collapse@id" class="collapse">
-                    <ul>
-                    @for(film <- staffRole.films.sortBy(_.releaseDate)) {
-                        <li><i>@film.title</i> (@film.releaseYear)</li>
+    <h3>Selected Filmography</h3>
+    @if(roles.nonEmpty) {
+        @for(role <- roles.sortBy(_.role)) {
+            @defining(role.role.replaceAll(" ", "")) { id =>
+                    @role match {
+                        case r: PersonCastRole => {
+                            <p>
+                                <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
+                                    <strong>@r.role (@r.credits.size)</strong>
+                                </a>
+
+                            </p>
+                            <div id="collapse@id" class="collapse">
+                                <ul>
+                                @for(credit <- r.credits.sortBy(_.film.releaseDate)) {
+                                    <li><i>@credit.film.title</i> (@credit.film.releaseYear) - @credit.characters.mkString(", ")</li>
+                                }
+                                </ul>
+                            </div>
+                        }
+                        case r: PersonStaffRole => {
+                            <p>
+                                <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
+                                    <strong>@r.role (@r.films.size)</strong>
+                                </a>
+
+                            </p>
+                            <div id="collapse@id" class="collapse">
+                                <ul>
+                                @for(film <- r.films.sortBy(_.releaseDate)) {
+                                    <li><i>@film.title</i> (@film.releaseYear)</li>
+                                }
+                                </ul>
+                            </div>
+                        }
                     }
-                    </ul>
-                </div>
             }
         }
     }

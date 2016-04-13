@@ -2,7 +2,7 @@ package com.wizardsofsmart.cineaste.service
 
 import javax.inject.Inject
 
-import com.wizardsofsmart.cineaste.domain.people.{Group, People, Person, PersonStaffRole}
+import com.wizardsofsmart.cineaste.domain.people.{Group, People, Person, PersonCastCredit, PersonCastRole, PersonStaffRole, Role}
 import com.wizardsofsmart.cineaste.respository.PersonRepository
 import com.wizardsofsmart.cineaste.value.error.{DomainError, EmptyResultsError}
 import play.api.libs.json.Json
@@ -24,16 +24,18 @@ class PersonService @Inject()(personRepository: PersonRepository) {
       }
    }
 
-   def person(uuid: String): Future[Either[DomainError, (Person, Seq[PersonStaffRole])]] = {
+   def person(uuid: String): Future[Either[DomainError, (Person, Seq[Role])]] = {
       personRepository.person(uuid).map {
          case Right(response) =>
             val json = Json.parse(response.body) \\ "data"
             val persons = for (row <- json(0) \\ "row") yield row(0).as[Person]
             val staffRoles = for (row <- json(1) \\ "row") yield row(0).as[PersonStaffRole]
+            val castRoles = for (row <- json(2) \\ "row") yield row(0).as[PersonCastCredit]
             if (persons.isEmpty) {
                Left(new EmptyResultsError)
             } else {
-               Right((persons(0), staffRoles))
+               val roles: Seq[Role] = if (castRoles.nonEmpty) staffRoles ++ Seq(PersonCastRole(castRoles)) else staffRoles
+               Right((persons(0), roles))
             }
          case Left(error) => Left(error)
       }

@@ -34,7 +34,8 @@ class PersonRepository @Inject()(queries: Neo4jQueries) {
          Json.toJson(
             Neo4jStatement.createStatements(
                queries.showcasedPersonQuery(uuid),
-               queries.personStaffCreditsQuery(uuid)
+               queries.personStaffCreditsQuery(uuid),
+               queries.personCastCreditsQuery(uuid)
             )
          ).toString()).map {
          response => Right(response)
