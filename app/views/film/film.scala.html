@@ -2,171 +2,181 @@
 @import com.wizardsofsmart.cineaste.domain.people.{Person, Group}
 @(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries], synopsis: String)
 @views.html.layout.base(Some(film.title)) {
-    <h1>@film.title</h1>
-
-    <div id="poster">
-        <!-- Poster -->
-        <img height="400" width="270" src="@routes.Assets.versioned("images/posters/" + film.uuid + ".jpg")">
+    <div class="row">
+        <h1>@film.title</h1>
     </div>
 
-    <div id="overview">
-        <table class="table table-condensed table-striped">
-            @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
-                <tr>
-                    <td>Original Title</td>
-                    <td><i>@Html(film.japaneseTitleUnicode.get)</i> (<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</td>
-                </tr>
-            }
-            @if(film.aliases.isDefined) {
-                <tr>
-                    <td>Also known as</td>
-                    <td>@Html(film.aliases.get.mkString("<i>", "</i><br/><i>", "</i>"))</td>
-                </tr>
-            }
-            <tr>
-                <td>Release Date</td>
-                <td>@film.displayReleaseDate</td>
-            </tr>
-            @defining(for(studio <- studios) yield studio.name) { studioNames =>
-                <tr>
-                    <td>Produced by</td>
-                    <td>@Html(studioNames.mkString("<br/>"))</td>
-                </tr>
-            }
-            <tr>
-                <td>Runtime</td>
-                <td>@film.duration minutes</td>
-            </tr>
-            @if(series.isDefined) {
-                @if(series.get.precedent.isDefined) {
-                    @defining(series.get.precedent.get) { precedent =>
+    <div class="row">
+        <div class="col-md-4">
+            <div id="poster">
+                <!-- Poster -->
+                <img class="img-thumbnail" height="400" width="270" src="@routes.Assets.versioned("images/posters/" + film.uuid + ".jpg")">
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div id="overview">
+                <table class="table table-condensed table-striped table-nonfluid">
+                    <caption>Overview</caption>
+                    @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
                         <tr>
-                            <td>Preceded by</td>
-                            @if(precedent.showcase) {
-                                <td><a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></td>
-                            } else {
-                                <td>Preceded by <i>@series.get.precedent.get.title</i></td>
+                            <td>Original Title</td>
+                            <td><i>@Html(film.japaneseTitleUnicode.get)</i><br/>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</td>
+                        </tr>
+                    }
+                    @if(film.aliases.isDefined) {
+                        <tr>
+                            <td>Also known as</td>
+                            <td>@Html(film.aliases.get.mkString("<i>", "</i><br/><i>", "</i>"))</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Release Date</td>
+                        <td>@film.displayReleaseDate</td>
+                    </tr>
+                    @defining(for(studio <- studios) yield studio.name) { studioNames =>
+                        <tr>
+                            <td>Produced by</td>
+                            <td>@Html(studioNames.mkString("<br/>"))</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Runtime</td>
+                        <td>@film.duration minutes</td>
+                    </tr>
+                    @if(series.isDefined) {
+                        @if(series.get.precedent.isDefined) {
+                            @defining(series.get.precedent.get) { precedent =>
+                                <tr>
+                                    <td>Preceded by</td>
+                                    @if(precedent.showcase) {
+                                        <td><a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></td>
+                                    } else {
+                                        <td>Preceded by <i>@series.get.precedent.get.title</i></td>
+                                    }
+                                </tr>
                             }
+                        }
+                        @if(series.get.antecedent.isDefined) {
+                            @defining(series.get.antecedent.get) { antecedent =>
+                                <tr>
+                                    <td>Followed by</td>
+                                    @if(antecedent.showcase) {
+                                        <td><a href="@routes.FilmController.film(antecedent.uuid)"><i>@series.get.antecedent.get.title</i></a></td>
+                                    } else {
+                                        <td><i>@series.get.antecedent.get.title</i></td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div id="staff">
+                <!-- Staff -->
+                <table class="table table-condensed table-striped table-nonfluid">
+                    <caption>Staff</caption>
+                    @for(role <- staff) {
+                        <tr>
+                            <td style="vertical-align : top">@role.role</td>
+                            <td>
+                            @for(person <- role.people) {
+                                @if(person.showcase) {
+                                    @person match {
+                                        case p: Person => {
+                                            <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a> <br/>
+                                        }
+                                        case g: Group => {
+                                            <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a> <br/>
+                                        }
+                                    }
+                                } else {
+                                    @person.displayName <br/>
+                                }
+                            }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <!-- Synopsis modal button -->
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#synopsis-modal">
+                    View spoilerific synopsis
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="cast">
+            <!-- Top Billed Cast -->
+            <table class="table table-condensed table-striped table-nonfluid">
+                <caption>Cast</caption>
+                @defining(cast.filter(_.orders.head < 99)) { billedCast =>
+                    @for(member <- billedCast) {
+                        <tr>
+                            <td style="vertical-align : top">
+                                @if(member.people.showcase) {
+                                    @member.people match {
+                                        case p: Person => {
+                                            <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a>
+                                        }
+                                        case g: Group => {
+                                            <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a>
+                                        }
+                                    }
+                                } else {
+                                    @member.people.displayName
+                                }
+                            </td>
+                            <td>
+                            @for(character <- member.characters) {
+                                @character <br/>
+                            }
+                            </td>
                         </tr>
                     }
                 }
-            @if(series.get.antecedent.isDefined) {
-                @defining(series.get.antecedent.get) { antecedent =>
-                    <tr>
-                        <td>Followed by</td>
-                        @if(antecedent.showcase) {
-                            <td><a href="@routes.FilmController.film(antecedent.uuid)"><i>@series.get.antecedent.get.title</i></a></td>
-                        } else {
-                            <td><i>@series.get.antecedent.get.title</i></td>
+                @defining(cast.filter(_.orders.head == 99)) { uncreditedCast =>
+                    @if(uncreditedCast.nonEmpty) {
+                        @for(member <- uncreditedCast) {
+                            <tr>
+                                <td style="vertical-align : top">
+                                @if(member.people.showcase) {
+                                    @member.people match {
+                                        case p: Person => {
+                                            <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a>
+                                        }
+                                        case g: Group => {
+                                            <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a>
+                                        }
+                                    }
+                                } else {
+                                    @member.people.displayName
+                                }
+                                </td>
+                                <td>
+                                @for(character <- member.characters) {
+                                    @character <br/>
+                                }
+                                </td>
+                            </tr>
                         }
-                    </tr>
-                }
-            }
-        </table>
-    }
-    </div>
-
-    <hr/>
-        <!-- Synopsis modal button -->
-    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#synopsis-modal">
-        View spoilerific synopsis
-    </button>
-    <hr/>
-
-    <div id="staff">
-        <!-- Staff -->
-    <table>
-        <thead>Staff</thead>
-        @for(role <- staff) {
-            <tr>
-                <td style="vertical-align : top">@role.role</td>
-                <td>
-                @for(person <- role.people) {
-                    @if(person.showcase) {
-                        @person match {
-                            case p: Person => {
-                                <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a> <br/>
-                            }
-                            case g: Group => {
-                                <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a> <br/>
-                            }
-                        }
-                    } else {
-                        @person.displayName <br/>
                     }
-                }
-                </td>
-            </tr>
-        }
-    </table>
-    <hr/>
-    </div>
-
-    <div id="cast">
-        <!-- Top Billed Cast -->
-    <table>
-        <thead>Cast</thead>
-        @defining(cast.filter(_.orders.head < 99)) { billedCast =>
-            @for(member <- billedCast) {
-                <tr>
-                    <td style="vertical-align : top">
-                        @if(member.people.showcase) {
-                            @member.people match {
-                                case p: Person => {
-                                    <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a>
-                                }
-                                case g: Group => {
-                                    <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a>
-                                }
-                            }
-                        } else {
-                            @member.people.displayName
-                        }
-                    </td>
-                    <td>
-                    @for(character <- member.characters) {
-                        @character <br/>
-                    }
-                    </td>
-                </tr>
-            }
-        }
-    </table>
-
-        <!-- Uncredited Cast -->
-    @defining(cast.filter(_.orders.head == 99)) { uncreditedCast =>
-        @if(uncreditedCast.nonEmpty) {
-            <table>
-
-                <thead>Uncredited Cast</thead>
-                @for(member <- uncreditedCast) {
-                    <tr>
-                        <td style="vertical-align : top">
-                        @if(member.people.showcase) {
-                            @member.people match {
-                                case p: Person => {
-                                    <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a>
-                                }
-                                case g: Group => {
-                                    <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a>
-                                }
-                            }
-                        } else {
-                            @member.people.displayName
-                        }
-                        </td>
-                        <td>
-                        @for(character <- member.characters) {
-                            @character <br/>
-                        }
-                        </td>
-                    </tr>
                 }
             </table>
-        }
-    }
+        </div>
     </div>
-    <hr/>
+
         <!-- Synopsis modal content -->
     <div class="modal fade" id="synopsis-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog">

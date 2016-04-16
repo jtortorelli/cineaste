@@ -9,7 +9,9 @@
         @views.html.partials.bootstrap()
     </head>
     <body>
-        @views.html.partials.navbar()
-        @content
+        <div class="container">
+            @views.html.partials.navbar()
+            @content
+        </div>
     </body>
 </html>
