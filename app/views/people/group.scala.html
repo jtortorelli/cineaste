@@ -1,4 +1,5 @@
-@import com.wizardsofsmart.cineaste.domain.people.{Group, GroupMembers}
+@import com.wizardsofsmart.cineaste.domain.people.Group
+@import com.wizardsofsmart.cineaste.domain.people.GroupMembers
 @(group: Group, members: Option[GroupMembers])
 @views.html.layout.base(Some(group.displayName)) {
     <h1>@group.displayName</h1>
