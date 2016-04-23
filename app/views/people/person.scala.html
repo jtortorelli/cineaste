@@ -7,14 +7,7 @@
 
 @views.html.layout.base(Some(person.displayName)) {
     <h1>@person.displayName</h1>
-    @person.japaneseName.map { japaneseName =>
-        <h2>@Html(japaneseName)</h2>
-    }
-    @person.aliases.map { aliases =>
-        <p>Also known as @Html(aliases.mkString(", "))</p>
-    }
 
-    <h3>Bio</h3>
     @views.html.people.biographicalInfo(person)
 
     <h3>Selected Filmography</h3>

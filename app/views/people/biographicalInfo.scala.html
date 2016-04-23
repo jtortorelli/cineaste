@@ -20,24 +20,62 @@
 }
 
 @person.dob.map { dob =>
-    @if(dob == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
-        <p>Born: Unknown</p>
-        <p>Died: @prettyPrintDate(person.dod.get).getOrElse("") @deathPlace</p>
-    } else {
-        @if(dob != "unknown") {
-            @if(person.dod.isEmpty) {
-                <p>Born: @birthName @prettyPrintDate(dob).getOrElse("") @age @birthPlace</p>
-            } else {
-                @if(person.dod.get == "unknown") {
-                    <p>Born: @birthName @prettyPrintDate(dob).getOrElse("") @birthPlace</p>
-                    <p>Died: Unknown</p>
-                } else {
-                    <p>Born: @birthName @prettyPrintDate(dob).getOrElse("") @birthPlace</p>
-                    <p>Died: @prettyPrintDate(person.dod.get).getOrElse("") @age @deathPlace</p>
-                }
-            }
-        } else {
-            @Unit
+    <table class="table table-condensed table-striped table-nonfluid">
+        <caption>Bio</caption>
+        @person.japaneseName.map { japaneseName =>
+            <tr>
+                <td>Japanese Name</td>
+                <td>@Html(japaneseName)</td>
+            </tr>
         }
-    }
+
+        @person.aliases.map { aliases =>
+           <tr>
+               <td>Also known as</td>
+               <td>@Html(aliases.mkString("<br />"))</td>
+           </tr>
+        }
+
+        @if(dob == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
+            <tr>
+                <td>Born</td>
+                <td>Unknown</td>
+            </tr>
+            <tr>
+                <td>Died</td>
+                <td>@prettyPrintDate(person.dod.get).getOrElse("") @deathPlace</td>
+            </tr>
+        } else {
+            @if(dob != "unknown") {
+                @if(person.dod.isEmpty) {
+                    <tr>
+                        <td>Born</td>
+                        <td>@birthName @prettyPrintDate(dob).getOrElse("") @age @birthPlace</td>
+                    </tr>
+                } else {
+                    @if(person.dod.get == "unknown") {
+                        <tr>
+                            <td>Born</td>
+                            <td>@birthName @prettyPrintDate(dob).getOrElse("") @birthPlace</td>
+                        </tr>
+                        <tr>
+                            <td>Died</td>
+                            <td>Unknown</td>
+                        </tr>
+                    } else {
+                        <tr>
+                            <td>Born</td>
+                            <td>@birthName @prettyPrintDate(dob).getOrElse("") @birthPlace</td>
+                        </tr>
+                        <tr>
+                            <td>Died</td>
+                            <td>@prettyPrintDate(person.dod.get).getOrElse("") @age @deathPlace</td>
+                        </tr>
+                    }
+                }
+            } else {
+                @Unit
+            }
+        }
+    </table>
 }
