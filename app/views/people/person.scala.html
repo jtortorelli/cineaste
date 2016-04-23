@@ -1,4 +1,4 @@
-@import com.wizardsofsmart.cineaste.domain.people.{Person, PersonStaffRole, Role, PersonCastRole}
+@import com.wizardsofsmart.cineaste.domain.people.{Person, StaffRole, Role, CastRole}
 
 @(person: Person, roles: Seq[Role])
 
@@ -19,7 +19,7 @@
         @for(role <- roles.sortBy(_.role)) {
             @defining(role.role.replaceAll(" ", "")) { id =>
                 @role match {
-                    case r: PersonCastRole => {
+                    case r: CastRole => {
                         <p>
                             <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
                                 <strong>@r.role (@r.credits.size)</strong>
@@ -40,7 +40,7 @@
                             </ul>
                         </div>
                     }
-                    case r: PersonStaffRole => {
+                    case r: StaffRole => {
                         <p>
                             <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
                                 <strong>@r.role (@r.films.size)</strong>

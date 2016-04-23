@@ -8,25 +8,25 @@ sealed trait Role {
    val role: String
 }
 
-case class PersonStaffRole(role: String, films: Seq[Film]) extends Role
+case class StaffRole(role: String, films: Seq[Film]) extends Role
 
-object PersonStaffRole {
-   implicit val personStaffRoleReads: Reads[PersonStaffRole] = (
+object StaffRole {
+   implicit val personStaffRoleReads: Reads[StaffRole] = (
          (JsPath \ "role").read[String] and
                (JsPath \ "films").read[Seq[Film]]
-         ) (PersonStaffRole.apply _)
+         ) (StaffRole.apply _)
 }
 
-case class PersonCastCredit(film: Film, characters: Seq[String])
+case class CastCredit(film: Film, characters: Seq[String])
 
-object PersonCastCredit {
-   implicit val personCastCreditReads: Reads[PersonCastCredit] = (
+object CastCredit {
+   implicit val personCastCreditReads: Reads[CastCredit] = (
          (JsPath \ "film").read[Film] and
                (JsPath \ "characters").read[Seq[String]]
-         )(PersonCastCredit.apply _)
+         )(CastCredit.apply _)
 }
 
 
-case class PersonCastRole(credits: Seq[PersonCastCredit]) extends Role {
+case class CastRole(credits: Seq[CastCredit]) extends Role {
    val role = "Actor"
 }
