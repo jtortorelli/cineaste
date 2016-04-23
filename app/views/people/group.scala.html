@@ -9,5 +9,8 @@
     @group.activePeriod.map { period =>
         <p>Active Period: @period</p>
     }
+    @if(members.nonEmpty) {
+        <p>Members: @members.map(x => x.displayName).mkString(", ")</p>
+    }
 
 }

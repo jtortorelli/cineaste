@@ -57,7 +57,7 @@ class Neo4jQueries @Inject()(ws: WSClient) {
    }
 
    def groupMembersQuery(uuid: String) = {
-      s"""match (n:Person)-[:MEMBER_OF]->(g:Group {uuid: \"$uuid\"}) with collect(n) as members return {members: members}"""
+      s"""match (n:Person)-[:MEMBER_OF]->(g:Group {uuid: \"$uuid\"}) return n"""
    }
 
    def personStaffCreditsQuery(uuid: String) = {
