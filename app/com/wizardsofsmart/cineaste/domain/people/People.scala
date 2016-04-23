@@ -16,7 +16,7 @@ object People {
    }
 }
 
-case class Group(uuid: String, name: String, showcase: Boolean) extends People {
+case class Group(uuid: String, name: String, showcase: Boolean, activeStart: Option[String], activeEnd: Option[String], japaneseName: Option[String]) extends People {
    override val displayName: String = this.name
    override val sortName: String = {
       if (this.name.startsWith("The ")) {
@@ -25,14 +25,37 @@ case class Group(uuid: String, name: String, showcase: Boolean) extends People {
          this.name
       }
    }
+   val activePeriod = {
+      if (this.activeStart.isDefined) {
+         val startYear = new DateTime(this.activeStart.get).getYear
+         if (this.activeEnd.isDefined) {
+            val endYear = new DateTime(this.activeEnd.get).getYear
+            Some(s"$startYear - $endYear")
+         } else {
+            Some(s"$startYear - Present")
+         }
+      } else {
+         None
+      }
+   }
 }
 
 object Group {
    implicit val groupReads: Reads[Group] = (
          (JsPath \ "uuid").read[String] and
                (JsPath \ "name").read[String] and
-               (JsPath \ "showcase").read[Boolean]
+               (JsPath \ "showcase").read[Boolean] and
+               (JsPath \ "active_start").readNullable[String] and
+               (JsPath \ "active_end").readNullable[String] and
+               (JsPath \ "japanese_name").readNullable[String]
          ) (Group.apply _)
+}
+
+case class GroupMembers(members: Seq[Person])
+
+object GroupMembers {
+   implicit val groupMembersRead: Reads[GroupMembers] =
+      (__ \ "members").read[Seq[Person]].map(GroupMembers.apply)
 }
 
 case class Person(uuid: String,

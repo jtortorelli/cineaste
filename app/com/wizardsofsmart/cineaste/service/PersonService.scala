@@ -2,7 +2,7 @@ package com.wizardsofsmart.cineaste.service
 
 import javax.inject.Inject
 
-import com.wizardsofsmart.cineaste.domain.people.{Group, People, Person, PersonCastCredit, PersonCastRole, PersonStaffRole, Role}
+import com.wizardsofsmart.cineaste.domain.people.{Group, GroupMembers, People, Person, PersonCastCredit, PersonCastRole, PersonStaffRole, Role}
 import com.wizardsofsmart.cineaste.respository.PersonRepository
 import com.wizardsofsmart.cineaste.value.error.{DomainError, EmptyResultsError}
 import play.api.libs.json.Json
@@ -41,14 +41,17 @@ class PersonService @Inject()(personRepository: PersonRepository) {
       }
    }
 
-   def group(uuid: String): Future[Either[DomainError, Group]] = {
+   def group(uuid: String): Future[Either[DomainError, (Group, Option[GroupMembers])]] = {
       personRepository.group(uuid).map {
          case Right(response) =>
-            val groups = for (row <- Json.parse(response.body) \\ "row") yield row(0).as[Group]
+            val json = Json.parse(response.body) \\ "data"
+            val groups = for (row <- json(0) \\ "row") yield row(0).as[Group]
+            val members = for (row <- json(1) \\ "row") yield row(0).as[GroupMembers]
             if (groups.isEmpty) {
                Left(new EmptyResultsError)
             } else {
-               Right(groups(0))
+               val membersOption = if (members(0).members.nonEmpty) Some(members(0)) else None
+               Right((groups(0), membersOption))
             }
          case Left(error) => Left(error)
       }
