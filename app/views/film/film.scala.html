@@ -82,7 +82,7 @@
                     <caption>Staff</caption>
                     @for(role <- staff) {
                         <tr>
-                            <td style="vertical-align : top">@role.role</td>
+                            <td>@role.role</td>
                             <td>
                             @for(person <- role.people) {
                                 @if(person.showcase) {
@@ -125,7 +125,7 @@
                 @defining(cast.filter(_.orders.head < 99)) { billedCast =>
                     @for(member <- billedCast) {
                         <tr>
-                            <td style="vertical-align : top">
+                            <td>
                                 @if(member.people.showcase) {
                                     @member.people match {
                                         case p: Person => {
@@ -151,7 +151,7 @@
                     @if(uncreditedCast.nonEmpty) {
                         @for(member <- uncreditedCast) {
                             <tr>
-                                <td style="vertical-align : top">
+                                <td>
                                 @if(member.people.showcase) {
                                     @member.people match {
                                         case p: Person => {
