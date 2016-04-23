@@ -1,6 +1,9 @@
 @import com.wizardsofsmart.cineaste.domain.people.Group
 @import com.wizardsofsmart.cineaste.domain.people.Person
-@(group: Group, members: Seq[Person])
+@import com.wizardsofsmart.cineaste.domain.people.Role
+
+@(group: Group, members: Seq[Person], roles: Seq[Role])
+
 @views.html.layout.base(Some(group.displayName)) {
     <h1>@group.displayName</h1>
     <table class="table table-condensed table-striped table-nonfluid">
@@ -23,5 +26,7 @@
             </tr>
         }
     </table>
+
+    @views.html.people.selectedFilmography(roles)
 
 }

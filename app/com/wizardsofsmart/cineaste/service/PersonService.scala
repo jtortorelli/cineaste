@@ -41,16 +41,19 @@ class PersonService @Inject()(personRepository: PersonRepository) {
       }
    }
 
-   def group(uuid: String): Future[Either[DomainError, (Group, Seq[Person])]] = {
+   def group(uuid: String): Future[Either[DomainError, (Group, Seq[Person], Seq[Role])]] = {
       personRepository.group(uuid).map {
          case Right(response) =>
             val json = Json.parse(response.body) \\ "data"
             val groups = for (row <- json(0) \\ "row") yield row(0).as[Group]
             val members = for (row <- json(1) \\ "row") yield row(0).as[Person]
+            val staffRoles = for (row <- json(2) \\ "row") yield row(0).as[StaffRole]
+            val castRoles = for (row <- json(3) \\ "row") yield (row(0).as[CastCredit])
             if (groups.isEmpty) {
                Left(new EmptyResultsError)
             } else {
-               Right((groups(0), members))
+               val roles: Seq[Role] = if (castRoles.nonEmpty) staffRoles ++ Seq(CastRole(castRoles)) else staffRoles
+               Right((groups(0), members, roles))
             }
          case Left(error) => Left(error)
       }

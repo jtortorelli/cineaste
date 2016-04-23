@@ -6,6 +6,9 @@ import play.api.libs.ws.WSClient
 
 class Neo4jQueries @Inject()(ws: WSClient) {
 
+   val GROUP = "Group"
+   val PERSON = "Person"
+
    def statementRequest = {
       ws.url(statementURL).withHeaders("Accept" -> "application/json", "Content-Type" -> "application/json")
    }
@@ -60,12 +63,28 @@ class Neo4jQueries @Inject()(ws: WSClient) {
       s"""match (n:Person)-[:MEMBER_OF]->(g:Group {uuid: \"$uuid\"}) return n"""
    }
 
+   def groupStaffCreditsQuery(uuid: String) = {
+      staffCreditsQuery(uuid, GROUP)
+   }
+
+   def groupCastCreditsQuery(uuid: String) = {
+      castCreditsQuery(uuid, GROUP)
+   }
+
    def personStaffCreditsQuery(uuid: String) = {
-      s"""match (n:Person {uuid: \"$uuid\"})-[r:WORKED_ON]->(m:Film) where r.role <> \"Actor\" with distinct r.role as role, collect(m) as films return {role: role, films: films}"""
+      staffCreditsQuery(uuid, PERSON)
    }
 
    def personCastCreditsQuery(uuid: String) = {
-      s"""match (n:Person {uuid: \"$uuid\"})-[r:WORKED_ON {role: \"Actor\"}]->(m:Film) with distinct m as film, collect(r.character) as characters return {film: film, characters: characters}"""
+      castCreditsQuery(uuid, PERSON)
+   }
+
+   def castCreditsQuery(uuid: String, label: String) = {
+      s"""match (n:$label {uuid: \"$uuid\"})-[r:WORKED_ON {role: \"Actor\"}]->(m:Film) with distinct m as film, collect(r.character) as characters return {film: film, characters: characters}"""
+   }
+
+   def staffCreditsQuery(uuid: String, label: String) = {
+      s"""match (n:$label {uuid: \"$uuid\"})-[r:WORKED_ON]->(m:Film) where r.role <> \"Actor\" with distinct r.role as role, collect(m) as films return {role: role, films: films}"""
    }
 
 }
