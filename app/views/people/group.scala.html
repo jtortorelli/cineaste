@@ -1,19 +1,13 @@
 @import com.wizardsofsmart.cineaste.domain.people.Group
-@import com.wizardsofsmart.cineaste.domain.people.GroupMembers
-@(group: Group, members: Option[GroupMembers])
+@import com.wizardsofsmart.cineaste.domain.people.Person
+@(group: Group, members: Seq[Person])
 @views.html.layout.base(Some(group.displayName)) {
     <h1>@group.displayName</h1>
-    @if(group.japaneseName.isDefined) {
-        <h2>@Html(group.japaneseName.get)</h2>
+    @group.japaneseName.map { japaneseName =>
+        <h2>@Html(japaneseName)</h2>
     }
-    @if(group.activePeriod.isDefined) {
-        <p>Active Period: @group.activePeriod.get</p>
-    }
-    @members.map { members =>
-        <p>Members</p>
-        @for(member <- members.members) {
-            @member.displayName <br/>
-        }
+    @group.activePeriod.map { period =>
+        <p>Active Period: @period</p>
     }
 
 }

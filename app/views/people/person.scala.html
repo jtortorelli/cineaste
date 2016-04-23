@@ -7,11 +7,11 @@
 
 @views.html.layout.base(Some(person.displayName)) {
     <h1>@person.displayName</h1>
-    @if(person.japaneseName.isDefined) {
-        <h2>@Html(person.japaneseName.get)</h2>
+    @person.japaneseName.map { japaneseName =>
+        <h2>@Html(japaneseName)</h2>
     }
-    @if(person.aliases.isDefined) {
-        <p>Also known as @Html(person.aliases.get.mkString(", "))</p>
+    @person.aliases.map { aliases =>
+        <p>Also known as @Html(aliases.mkString(", "))</p>
     }
 
     <h3>Bio</h3>

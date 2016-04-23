@@ -1,5 +1,10 @@
-@import com.wizardsofsmart.cineaste.domain.film.{Film, FilmCast, FilmSeries, FilmStaff, FilmStudio}
-@import com.wizardsofsmart.cineaste.domain.people.{Person, Group}
+@import com.wizardsofsmart.cineaste.domain.film.Film
+@import com.wizardsofsmart.cineaste.domain.film.FilmCast
+@import com.wizardsofsmart.cineaste.domain.film.FilmSeries
+@import com.wizardsofsmart.cineaste.domain.film.FilmStaff
+@import com.wizardsofsmart.cineaste.domain.film.FilmStudio
+@import com.wizardsofsmart.cineaste.domain.people.Person
+@import com.wizardsofsmart.cineaste.domain.people.Group
 @(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries], synopsis: String)
 @views.html.layout.base(Some(film.title)) {
     <div class="row">
@@ -24,10 +29,10 @@
                             <td><i>@Html(film.japaneseTitleUnicode.get)</i><br/>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</td>
                         </tr>
                     }
-                    @if(film.aliases.isDefined) {
+                    @film.aliases.map { aliases =>
                         <tr>
                             <td>Also known as</td>
-                            <td>@Html(film.aliases.get.mkString("<i>", "</i><br/><i>", "</i>"))</td>
+                            <td>@Html(aliases.mkString("<i>", "</i><br/><i>", "</i>"))</td>
                         </tr>
                     }
                     <tr>
@@ -44,30 +49,26 @@
                         <td>Runtime</td>
                         <td>@film.duration minutes</td>
                     </tr>
-                    @if(series.isDefined) {
-                        @if(series.get.precedent.isDefined) {
-                            @defining(series.get.precedent.get) { precedent =>
-                                <tr>
-                                    <td>Preceded by</td>
-                                    @if(precedent.showcase) {
-                                        <td><a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></td>
-                                    } else {
-                                        <td>Preceded by <i>@series.get.precedent.get.title</i></td>
-                                    }
-                                </tr>
-                            }
+                    @series.map { series =>
+                        @series.precedent.map { precedent =>
+                            <tr>
+                                <td>Preceded by</td>
+                                @if(precedent.showcase) {
+                                    <td><a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></td>
+                                } else {
+                                    <td>Preceded by <i>@precedent.title</i></td>
+                                }
+                            </tr>
                         }
-                        @if(series.get.antecedent.isDefined) {
-                            @defining(series.get.antecedent.get) { antecedent =>
-                                <tr>
-                                    <td>Followed by</td>
-                                    @if(antecedent.showcase) {
-                                        <td><a href="@routes.FilmController.film(antecedent.uuid)"><i>@series.get.antecedent.get.title</i></a></td>
-                                    } else {
-                                        <td><i>@series.get.antecedent.get.title</i></td>
-                                    }
-                                </tr>
-                            }
+                        @series.antecedent.map { antecedent =>
+                            <tr>
+                                <td>Followed by</td>
+                                @if(antecedent.showcase) {
+                                    <td><a href="@routes.FilmController.film(antecedent.uuid)"><i>@antecedent.title</i></a></td>
+                                } else {
+                                    <td><i>@antecedent.title</i></td>
+                                }
+                            </tr>
                         }
                     }
                 </table>

@@ -1,5 +1,5 @@
 @import com.wizardsofsmart.cineaste.domain.people.Person
-@import com.wizardsofsmart.cineaste.util.DateUtil._
+@import com.wizardsofsmart.cineaste.util.DateUtil.prettyPrintDate
 
 @(person: Person)
 
@@ -19,27 +19,25 @@
     @Html(person.birthName.map(_ + "<br/>").getOrElse(""))
 }
 
-@if(person.dob.isDefined) {
-    @if(person.dob.get == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
+@person.dob.map { dob =>
+    @if(dob == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
         <p>Born: Unknown</p>
         <p>Died: @prettyPrintDate(person.dod.get).getOrElse("") @deathPlace</p>
     } else {
-        @if(person.dob.get != "unknown") {
+        @if(dob != "unknown") {
             @if(person.dod.isEmpty) {
-                <p>Born: @birthName @prettyPrintDate(person.dob.get).getOrElse("") @age @birthPlace</p>
+                <p>Born: @birthName @prettyPrintDate(dob).getOrElse("") @age @birthPlace</p>
             } else {
                 @if(person.dod.get == "unknown") {
-                    <p>Born: @birthName @prettyPrintDate(person.dob.get).getOrElse("") @birthPlace</p>
+                    <p>Born: @birthName @prettyPrintDate(dob).getOrElse("") @birthPlace</p>
                     <p>Died: Unknown</p>
                 } else {
-                    <p>Born: @birthName @prettyPrintDate(person.dob.get).getOrElse("") @birthPlace</p>
+                    <p>Born: @birthName @prettyPrintDate(dob).getOrElse("") @birthPlace</p>
                     <p>Died: @prettyPrintDate(person.dod.get).getOrElse("") @age @deathPlace</p>
                 }
             }
         } else {
-            ""
+            @Unit
         }
     }
-} else {
-    ""
 }
