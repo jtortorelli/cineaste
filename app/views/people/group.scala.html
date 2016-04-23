@@ -3,14 +3,25 @@
 @(group: Group, members: Seq[Person])
 @views.html.layout.base(Some(group.displayName)) {
     <h1>@group.displayName</h1>
-    @group.japaneseName.map { japaneseName =>
-        <h2>@Html(japaneseName)</h2>
-    }
-    @group.activePeriod.map { period =>
-        <p>Active Period: @period</p>
-    }
-    @if(members.nonEmpty) {
-        <p>Members: @members.map(x => x.displayName).mkString(", ")</p>
-    }
+    <table class="table table-condensed table-striped table-nonfluid">
+        @group.japaneseName.map { japaneseName =>
+            <tr>
+                <td>Japanese Name</td>
+                <td>@Html(japaneseName)</td>
+            </tr>
+        }
+        @if(members.nonEmpty) {
+            <tr>
+                <td>Members</td>
+                <td>@Html(members.map(x => x.displayName).mkString("<br />"))</td>
+            </tr>
+        }
+        @group.activePeriod.map { period =>
+            <tr>
+                <td>Active Period</td>
+                <td>@period</td>
+            </tr>
+        }
+    </table>
 
 }
