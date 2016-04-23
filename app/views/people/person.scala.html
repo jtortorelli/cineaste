@@ -1,30 +1,6 @@
 @import com.wizardsofsmart.cineaste.domain.people.{Person, PersonStaffRole, Role, PersonCastRole}
-@import com.wizardsofsmart.cineaste.util.DateUtil._
-@(person: Person, roles: Seq[Role])
 
-@biographicalInfo(person: Person) = @{
-    val age = person.age.map("(" + _ + ")").getOrElse("")
-    val deathPlace = person.deathPlace.map("<br/>" + _).getOrElse("")
-    val birthPlace = person.birthPlace.map("<br/>" + _).getOrElse("")
-    val birthName = person.birthName.map(_ + "<br/>").getOrElse("")
-    if(person.dob.isDefined) {
-        if(person.dob.get == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
-            s"<p>Born: Unknown</p><p>Died: ${prettyPrintDate(person.dod.get).getOrElse("")} $deathPlace</p>"
-        } else if(person.dob.get != "unknown") {
-            if(person.dod.isEmpty) {
-                s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $age $birthPlace</p>"
-            } else if(person.dod.get == "unknown") {
-                s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $birthPlace</p><p>Died: Unknown</p>"
-            } else {
-                s"<p>Born: $birthName ${prettyPrintDate(person.dob.get).getOrElse("")} $birthPlace</p><p>Died: ${prettyPrintDate(person.dod.get).getOrElse("")} $age $deathPlace</p>"
-            }
-        } else {
-            ""
-        }
-    } else {
-        ""
-    }
-}
+@(person: Person, roles: Seq[Role])
 
 @views.html.layout.base(Some(person.displayName)) {
     <h1>@person.displayName</h1>
@@ -36,55 +12,55 @@
     }
 
     <h3>Bio</h3>
-    @Html(biographicalInfo(person))
+    @views.html.people.biographicalInfo(person)
 
     <h3>Selected Filmography</h3>
     @if(roles.nonEmpty) {
         @for(role <- roles.sortBy(_.role)) {
             @defining(role.role.replaceAll(" ", "")) { id =>
-                    @role match {
-                        case r: PersonCastRole => {
-                            <p>
-                                <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
-                                    <strong>@r.role (@r.credits.size)</strong>
-                                </a>
+                @role match {
+                    case r: PersonCastRole => {
+                        <p>
+                            <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
+                                <strong>@r.role (@r.credits.size)</strong>
+                            </a>
 
-                            </p>
-                            <div id="collapse@id" class="collapse">
-                                <ul>
-                                @for(credit <- r.credits.sortBy(_.film.releaseDate)) {
-                                    <li>
-                                        @if(credit.film.showcase) {
-                                            <a href="@routes.FilmController.film(credit.film.uuid)"><i>@credit.film.title</i> (@credit.film.releaseYear)</a> - @credit.characters.mkString(", ")
-                                        } else {
-                                            <i>@credit.film.title</i> (@credit.film.releaseYear) - @credit.characters.mkString(", ")
-                                        }
-                                    </li>
-                                }
-                                </ul>
-                            </div>
-                        }
-                        case r: PersonStaffRole => {
-                            <p>
-                                <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
-                                    <strong>@r.role (@r.films.size)</strong>
-                                </a>
-                            </p>
-                            <div id="collapse@id" class="collapse">
-                                <ul>
-                                @for(film <- r.films.sortBy(_.releaseDate)) {
-                                    <li>
-                                        @if(film.showcase) {
-                                            <a href="@routes.FilmController.film(film.uuid)"><i>@film.title</i> (@film.releaseYear)</a>
-                                        } else {
-                                            <i>@film.title</i> (@film.releaseYear)
-                                        }
-                                    </li>
-                                }
-                                </ul>
-                            </div>
-                        }
+                        </p>
+                        <div id="collapse@id" class="collapse">
+                            <ul>
+                            @for(credit <- r.credits.sortBy(_.film.releaseDate)) {
+                                <li>
+                                    @if(credit.film.showcase) {
+                                        <a href="@routes.FilmController.film(credit.film.uuid)"><i>@credit.film.title</i> (@credit.film.releaseYear)</a> - @credit.characters.mkString(", ")
+                                    } else {
+                                        <i>@credit.film.title</i> (@credit.film.releaseYear) - @credit.characters.mkString(", ")
+                                    }
+                                </li>
+                            }
+                            </ul>
+                        </div>
                     }
+                    case r: PersonStaffRole => {
+                        <p>
+                            <a data-toggle="collapse" href="#collapse@id" aria-expanded="false" aria-controls="collapse@id">
+                                <strong>@r.role (@r.films.size)</strong>
+                            </a>
+                        </p>
+                        <div id="collapse@id" class="collapse">
+                            <ul>
+                            @for(film <- r.films.sortBy(_.releaseDate)) {
+                                <li>
+                                    @if(film.showcase) {
+                                        <a href="@routes.FilmController.film(film.uuid)"><i>@film.title</i> (@film.releaseYear)</a>
+                                    } else {
+                                        <i>@film.title</i> (@film.releaseYear)
+                                    }
+                                </li>
+                            }
+                            </ul>
+                        </div>
+                    }
+                }
             }
         }
     }
