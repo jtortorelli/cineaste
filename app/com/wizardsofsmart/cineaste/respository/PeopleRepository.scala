@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class PersonRepository @Inject()(queries: Neo4jQueries) {
+class PeopleRepository @Inject()(queries: Neo4jQueries) {
 
    def people: Future[Either[DomainError, WSResponse]] = {
       queries.statementRequest.post(

@@ -9,10 +9,10 @@
     @for(p <- people) {
         @p match {
             case p: Person => {
-                <li><a href="@(routes.PersonController.person(p.uuid))">@p.sortName</a></li>
+                <li><a href="@(routes.PeopleController.person(p.uuid))">@p.sortName</a></li>
             }
             case p: Group => {
-                <li><a href="@(routes.PersonController.group(p.uuid))">@p.displayName</a></li>
+                <li><a href="@(routes.PeopleController.group(p.uuid))">@p.displayName</a></li>
             }
         }
     }

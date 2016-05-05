@@ -3,7 +3,7 @@ package com.wizardsofsmart.cineaste.service
 import javax.inject.Inject
 
 import com.wizardsofsmart.cineaste.domain.people.{Group, GroupMembers, People, Person, CastCredit, CastRole, StaffRole, Role}
-import com.wizardsofsmart.cineaste.respository.PersonRepository
+import com.wizardsofsmart.cineaste.respository.PeopleRepository
 import com.wizardsofsmart.cineaste.value.error.{DomainError, EmptyResultsError}
 import play.api.libs.json.Json
 
@@ -11,9 +11,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-class PersonService @Inject()(personRepository: PersonRepository) {
+class PeopleService @Inject()(peopleRepository: PeopleRepository) {
    def people: Future[Either[DomainError, Seq[People]]] = {
-      personRepository.people.map {
+      peopleRepository.people.map {
          case Right(response) =>
             val json = Json.parse(response.body) \\ "data"
             val persons = for (row <- json(0) \\ "row") yield row(0).as[Person]
@@ -25,7 +25,7 @@ class PersonService @Inject()(personRepository: PersonRepository) {
    }
 
    def person(uuid: String): Future[Either[DomainError, (Person, Seq[Role])]] = {
-      personRepository.person(uuid).map {
+      peopleRepository.person(uuid).map {
          case Right(response) =>
             val json = Json.parse(response.body) \\ "data"
             val persons = for (row <- json(0) \\ "row") yield row(0).as[Person]
@@ -42,13 +42,13 @@ class PersonService @Inject()(personRepository: PersonRepository) {
    }
 
    def group(uuid: String): Future[Either[DomainError, (Group, Seq[Person], Seq[Role])]] = {
-      personRepository.group(uuid).map {
+      peopleRepository.group(uuid).map {
          case Right(response) =>
             val json = Json.parse(response.body) \\ "data"
             val groups = for (row <- json(0) \\ "row") yield row(0).as[Group]
             val members = for (row <- json(1) \\ "row") yield row(0).as[Person]
             val staffRoles = for (row <- json(2) \\ "row") yield row(0).as[StaffRole]
-            val castRoles = for (row <- json(3) \\ "row") yield (row(0).as[CastCredit])
+            val castRoles = for (row <- json(3) \\ "row") yield row(0).as[CastCredit]
             if (groups.isEmpty) {
                Left(new EmptyResultsError)
             } else {

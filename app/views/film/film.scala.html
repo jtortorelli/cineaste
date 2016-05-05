@@ -88,10 +88,10 @@
                                 @if(person.showcase) {
                                     @person match {
                                         case p: Person => {
-                                            <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a> <br/>
+                                            <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a> <br/>
                                         }
                                         case g: Group => {
-                                            <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a> <br/>
+                                            <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a> <br/>
                                         }
                                     }
                                 } else {
@@ -129,10 +129,10 @@
                                 @if(member.people.showcase) {
                                     @member.people match {
                                         case p: Person => {
-                                            <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a>
+                                            <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a>
                                         }
                                         case g: Group => {
-                                            <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a>
+                                            <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a>
                                         }
                                     }
                                 } else {
@@ -155,10 +155,10 @@
                                 @if(member.people.showcase) {
                                     @member.people match {
                                         case p: Person => {
-                                            <a href="@routes.PersonController.person(p.uuid)">@p.displayName</a>
+                                            <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a>
                                         }
                                         case g: Group => {
-                                            <a href="@routes.PersonController.group(g.uuid)">@g.displayName</a>
+                                            <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a>
                                         }
                                     }
                                 } else {
