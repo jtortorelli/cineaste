@@ -8,6 +8,19 @@
 @views.html.layout.base(Some(person.displayName)) {
     <h1>@person.displayName</h1>
 
+    @if(person.profilePic) {
+        <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/person/" + person.uuid + ".jpg")">
+    } else {
+        @person.gender match {
+            case "F" => {
+                <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/person/default_female.jpg")">
+            }
+            case _ => {
+                <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/person/default_male.jpg")">
+            }
+        }
+    }
+
     @views.html.people.biographicalInfo(person)
 
     @views.html.people.selectedFilmography(roles)

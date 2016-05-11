@@ -68,6 +68,8 @@ case class Person(uuid: String,
                   aliases: Option[Seq[String]],
                   birthPlace: Option[String],
                   deathPlace: Option[String],
+                  profilePic: Boolean,
+                  gender: String,
                   showcase: Boolean) extends People {
    override val displayName: String = s"${this.firstName} ${this.lastName}"
    override val sortName: String = s"${this.lastName}, ${this.firstName}"
@@ -114,6 +116,8 @@ object Person {
                (JsPath \ "aliases").readNullable[Seq[String]] and
                (JsPath \ "birth_place").readNullable[String] and
                (JsPath \ "death_place").readNullable[String] and
+               (JsPath \ "profile_pic").read[Boolean] and
+               (JsPath \ "gender").read[String] and
                (JsPath \ "showcase").read[Boolean]
          ) (Person.apply _)
 
