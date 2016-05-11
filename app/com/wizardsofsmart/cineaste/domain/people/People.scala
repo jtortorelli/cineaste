@@ -16,7 +16,7 @@ object People {
    }
 }
 
-case class Group(uuid: String, name: String, showcase: Boolean, activeStart: Option[String], activeEnd: Option[String], japaneseName: Option[String]) extends People {
+case class Group(uuid: String, name: String, showcase: Boolean, activeStart: Option[String], activeEnd: Option[String], japaneseName: Option[String], profilePic: Boolean) extends People {
    override val displayName: String = this.name
    override val sortName: String = {
       if (this.name.startsWith("The ")) {
@@ -47,7 +47,8 @@ object Group {
                (JsPath \ "showcase").read[Boolean] and
                (JsPath \ "active_start").readNullable[String] and
                (JsPath \ "active_end").readNullable[String] and
-               (JsPath \ "japanese_name").readNullable[String]
+               (JsPath \ "japanese_name").readNullable[String] and
+               (JsPath \ "profile_pic").read[Boolean]
          ) (Group.apply _)
 }
 
