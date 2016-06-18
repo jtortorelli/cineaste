@@ -19,23 +19,23 @@
     @Html(person.birthName.map(_ + "<br/>").getOrElse(""))
 }
 
-@person.dob.map { dob =>
-    <table class="table table-condensed table-striped table-nonfluid">
-        <caption>Bio</caption>
-        @person.japaneseName.map { japaneseName =>
-            <tr>
-                <td>Japanese Name</td>
-                <td>@Html(japaneseName)</td>
-            </tr>
-        }
+<table class="table table-condensed table-striped table-nonfluid">
+    @*<caption>Bio</caption>*@
+    @person.japaneseName.map { japaneseName =>
+        <tr>
+            <td>Japanese Name</td>
+            <td>@Html(japaneseName)</td>
+        </tr>
+    }
 
-        @person.aliases.map { aliases =>
-           <tr>
-               <td>Also known as</td>
-               <td>@Html(aliases.mkString("<br />"))</td>
-           </tr>
-        }
+    @person.aliases.map { aliases =>
+        <tr>
+            <td>Also known as</td>
+            <td>@Html(aliases.mkString("<br />"))</td>
+        </tr>
+    }
 
+    @person.dob.map { dob =>
         @if(dob == "unknown" && person.dod.isDefined && person.dod.get != "unknown") {
             <tr>
                 <td>Born</td>
@@ -77,5 +77,5 @@
                 @Unit
             }
         }
-    </table>
-}
+    }
+</table>
