@@ -1,12 +1,14 @@
 @import com.wizardsofsmart.cineaste.domain.people.Person
 @import com.wizardsofsmart.cineaste.domain.people.Role
+@import play.api.Play.resource
+@import play.api.Play.current
 
 @(person: Person, roles: Seq[Role])
 
 @views.html.layout.base(Some(person.displayName)) {
     <h1>@person.displayName</h1>
 
-    @if(person.profilePic) {
+    @if(resource("/public/images/profile_pics/person/" + person.uuid + ".jpg").isDefined) {
         <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/person/" + person.uuid + ".jpg")">
     } else {
         @person.gender match {
