@@ -8,7 +8,7 @@
 
 @views.html.layout.base(Some(group.displayName)) {
     <h1>@group.displayName</h1>
-    @if(resource("/public/images/profile_pics/group/" + group.uuid + ".jpg")) {
+    @if(resource("/public/images/profile_pics/group/" + group.uuid + ".jpg").isDefined) {
         <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/group/" + group.uuid + ".jpg")">
     } else {
         <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/group/default_group.jpg")">
