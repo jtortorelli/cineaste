@@ -23,7 +23,7 @@ class PeopleController @Inject()(peopleService: PeopleService) extends Controlle
 
    def person(uuid: String) = Action.async {
       peopleService.person(uuid).map {
-         case Right(response) => Ok(views.html.people.person(response._1, response._2))
+         case Right(response) => Ok(views.html.people.person(response._1, response._2, response._3))
          case Left(error) => error match {
             case e: Neo4jConnectionError => ServiceUnavailable(views.html.errors.serviceUnavailable(e.message))
             case e: EmptyResultsError => NotFound(views.html.errors.notFound(e.message))
