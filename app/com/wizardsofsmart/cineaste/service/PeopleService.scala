@@ -54,7 +54,7 @@ class PeopleService @Inject()(peopleRepository: PeopleRepository) {
       }
    }
 
-   def group(uuid: String): Future[Either[DomainError, (Group, Seq[Person], Seq[Role])]] = {
+   def group(uuid: String): Future[Either[DomainError, (Group, Seq[Person], Seq[Role], Option[String])]] = {
       peopleRepository.group(uuid).map {
          case Right(response) =>
             val json = Json.parse(response.body) \\ "data"
@@ -62,11 +62,12 @@ class PeopleService @Inject()(peopleRepository: PeopleRepository) {
             val members = for (row <- json(1) \\ "row") yield row(0).as[Person]
             val staffRoles = for (row <- json(2) \\ "row") yield row(0).as[StaffRole]
             val castRoles = for (row <- json(3) \\ "row") yield row(0).as[CastCredit]
+            val bio = getBio(uuid)
             if (groups.isEmpty) {
                Left(new EmptyResultsError)
             } else {
                val roles: Seq[Role] = if (castRoles.nonEmpty) staffRoles ++ Seq(CastRole(castRoles)) else staffRoles
-               Right((groups(0), members, roles))
+               Right((groups(0), members, roles, bio))
             }
          case Left(error) => Left(error)
       }

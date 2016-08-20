@@ -4,7 +4,7 @@
 @import play.api.Play.resource
 @import play.api.Play.current
 
-@(group: Group, members: Seq[Person], roles: Seq[Role])
+@(group: Group, members: Seq[Person], roles: Seq[Role], bio: Option[String])
 
 @views.html.layout.base(Some(group.displayName)) {
     <h1>@group.displayName</h1>
@@ -34,6 +34,12 @@
             </tr>
         }
     </table>
+
+    @bio.map { bio =>
+        <div>
+            @Html(bio)
+        </div>
+    }
 
     @views.html.people.selectedFilmography(roles)
 
