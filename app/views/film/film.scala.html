@@ -11,184 +11,200 @@
         <h1>@film.title</h1>
     </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div id="poster">
-                <!-- Poster -->
-                <img class="img-thumbnail" height="400" width="270" src="@routes.Assets.versioned("images/posters/" + film.uuid + ".jpg")">
-            </div>
-        </div>
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
+            <li role="presentation"><a href="#gallery" aria-controls="gallery" role="tab" data-toggle="tab">Gallery</a></li>
+            <li role="presentation"><a href="#review" aria-controls="review" role="tab" data-toggle="tab">Review</a></li>
+        </ul>
+    </div>
 
-        <div class="col-md-4">
-            <div id="overview">
-                <table class="table table-condensed table-striped table-nonfluid">
-                    <caption>Overview</caption>
-                    @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
-                        <tr>
-                            <td>Original Title</td>
-                            <td><i>@Html(film.japaneseTitleUnicode.get)</i><br/>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</td>
-                        </tr>
-                    }
-                    @film.aliases.map { aliases =>
-                        <tr>
-                            <td>Also known as</td>
-                            <td>@Html(aliases.mkString("<i>", "</i><br/><i>", "</i>"))</td>
-                        </tr>
-                    }
-                    <tr>
-                        <td>Release Date</td>
-                        <td>@film.displayReleaseDate</td>
-                    </tr>
-                    @defining(for(studio <- studios) yield studio.name) { studioNames =>
-                        <tr>
-                            <td>Produced by</td>
-                            <td>@Html(studioNames.mkString("<br/>"))</td>
-                        </tr>
-                    }
-                    <tr>
-                        <td>Runtime</td>
-                        <td>@film.duration minutes</td>
-                    </tr>
-                    @series.map { series =>
-                        @series.precedent.map { precedent =>
-                            <tr>
-                                <td>Preceded by</td>
-                                @if(precedent.showcase) {
-                                    <td><a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></td>
-                                } else {
-                                    <td>Preceded by <i>@precedent.title</i></td>
-                                }
-                            </tr>
-                        }
-                        @series.antecedent.map { antecedent =>
-                            <tr>
-                                <td>Followed by</td>
-                                @if(antecedent.showcase) {
-                                    <td><a href="@routes.FilmController.film(antecedent.uuid)"><i>@antecedent.title</i></a></td>
-                                } else {
-                                    <td><i>@antecedent.title</i></td>
-                                }
-                            </tr>
-                        }
-                    }
-                </table>
-            </div>
-        </div>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="overview">
+            <div class="row">
+                <div class="col-md-4">
+                    <div id="poster">
+                        <!-- Poster -->
+                        <img class="img-thumbnail" height="400" width="270" src="@routes.Assets.versioned("images/posters/" + film.uuid + ".jpg")">
+                    </div>
+                </div>
 
-        <div class="col-md-4">
-            <div id="staff">
-                <!-- Staff -->
-                <table class="table table-condensed table-striped table-nonfluid">
-                    <caption>Staff</caption>
-                    @for(role <- staff) {
-                        <tr>
-                            <td>@role.role</td>
-                            <td>
-                            @for(person <- role.people) {
-                                @if(person.showcase) {
-                                    @person match {
-                                        case p: Person => {
-                                            <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a> <br/>
+                <div class="col-md-4">
+                    <div id="overview">
+                        <table class="table table-condensed table-striped table-nonfluid">
+                            <caption>Info</caption>
+                            @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
+                                <tr>
+                                    <td>Original Title</td>
+                                    <td><i>@Html(film.japaneseTitleUnicode.get)</i><br/>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</td>
+                                </tr>
+                            }
+                            @film.aliases.map { aliases =>
+                                <tr>
+                                    <td>Also known as</td>
+                                    <td>@Html(aliases.mkString("<i>", "</i><br/><i>", "</i>"))</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>Release Date</td>
+                                <td>@film.displayReleaseDate</td>
+                            </tr>
+                            @defining(for(studio <- studios) yield studio.name) { studioNames =>
+                                <tr>
+                                    <td>Produced by</td>
+                                    <td>@Html(studioNames.mkString("<br/>"))</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>Runtime</td>
+                                <td>@film.duration minutes</td>
+                            </tr>
+                            @series.map { series =>
+                                @series.precedent.map { precedent =>
+                                    <tr>
+                                        <td>Preceded by</td>
+                                        @if(precedent.showcase) {
+                                            <td><a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></td>
+                                        } else {
+                                            <td>Preceded by <i>@precedent.title</i></td>
                                         }
-                                        case g: Group => {
-                                            <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a> <br/>
+                                    </tr>
+                                }
+                                @series.antecedent.map { antecedent =>
+                                    <tr>
+                                        <td>Followed by</td>
+                                        @if(antecedent.showcase) {
+                                            <td><a href="@routes.FilmController.film(antecedent.uuid)"><i>@antecedent.title</i></a></td>
+                                        } else {
+                                            <td><i>@antecedent.title</i></td>
                                         }
-                                    }
-                                } else {
-                                    @person.displayName <br/>
+                                    </tr>
                                 }
                             }
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
-        </div>
-    </div>
+                        </table>
+                    </div>
+                </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div>
-                <!-- Synopsis modal button -->
-                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#synopsis-modal">
-                    View spoilerific synopsis
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div id="cast">
-            <!-- Top Billed Cast -->
-            <table class="table table-condensed table-striped table-nonfluid">
-                <caption>Cast</caption>
-                @defining(cast.filter(_.orders.head < 99)) { billedCast =>
-                    @for(member <- billedCast) {
-                        <tr>
-                            <td>
-                                @if(member.people.showcase) {
-                                    @member.people match {
-                                        case p: Person => {
-                                            <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a>
-                                        }
-                                        case g: Group => {
-                                            <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a>
+                <div class="col-md-4">
+                    <div id="staff">
+                        <!-- Staff -->
+                        <table class="table table-condensed table-striped table-nonfluid">
+                            <caption>Staff</caption>
+                            @for(role <- staff) {
+                                <tr>
+                                    <td>@role.role</td>
+                                    <td>
+                                    @for(person <- role.people) {
+                                        @if(person.showcase) {
+                                            @person match {
+                                                case p: Person => {
+                                                    <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a> <br/>
+                                                }
+                                                case g: Group => {
+                                                    <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a> <br/>
+                                                }
+                                            }
+                                        } else {
+                                            @person.displayName <br/>
                                         }
                                     }
-                                } else {
-                                    @member.people.displayName
-                                }
-                            </td>
-                            <td>
-                            @for(character <- member.characters) {
-                                @character <br/>
+                                    </td>
+                                </tr>
                             }
-                            </td>
-                        </tr>
-                    }
-                }
-                @defining(cast.filter(_.orders.head == 99)) { uncreditedCast =>
-                    @if(uncreditedCast.nonEmpty) {
-                        @for(member <- uncreditedCast) {
-                            <tr>
-                                <td>
-                                @if(member.people.showcase) {
-                                    @member.people match {
-                                        case p: Person => {
-                                            <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a>
-                                        }
-                                        case g: Group => {
-                                            <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a>
-                                        }
-                                    }
-                                } else {
-                                    @member.people.displayName
-                                }
-                                </td>
-                                <td>
-                                @for(character <- member.characters) {
-                                    @character <br/>
-                                }
-                                </td>
-                            </tr>
-                        }
-                    }
-                }
-            </table>
-        </div>
-    </div>
-
-        <!-- Synopsis modal content -->
-    <div class="modal fade" id="synopsis-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Synopsis</h4>
-                </div>
-                <div class="modal-body">
-                @Html(synopsis)
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <!-- Synopsis modal button -->
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#synopsis-modal">
+                            View spoilerific synopsis
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div id="cast">
+                    <!-- Top Billed Cast -->
+                    <table class="table table-condensed table-striped table-nonfluid">
+                        <caption>Cast</caption>
+                        @defining(cast.filter(_.orders.head < 99)) { billedCast =>
+                            @for(member <- billedCast) {
+                                <tr>
+                                    <td>
+                                        @if(member.people.showcase) {
+                                            @member.people match {
+                                                case p: Person => {
+                                                    <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a>
+                                                }
+                                                case g: Group => {
+                                                    <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a>
+                                                }
+                                            }
+                                        } else {
+                                            @member.people.displayName
+                                        }
+                                    </td>
+                                    <td>
+                                    @for(character <- member.characters) {
+                                        @character <br/>
+                                    }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        @defining(cast.filter(_.orders.head == 99)) { uncreditedCast =>
+                            @if(uncreditedCast.nonEmpty) {
+                                @for(member <- uncreditedCast) {
+                                    <tr>
+                                        <td>
+                                        @if(member.people.showcase) {
+                                            @member.people match {
+                                                case p: Person => {
+                                                    <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a>
+                                                }
+                                                case g: Group => {
+                                                    <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a>
+                                                }
+                                            }
+                                        } else {
+                                            @member.people.displayName
+                                        }
+                                        </td>
+                                        <td>
+                                        @for(character <- member.characters) {
+                                            @character <br/>
+                                        }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+
+                <!-- Synopsis modal content -->
+            <div class="modal fade" id="synopsis-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Synopsis</h4>
+                        </div>
+                        <div class="modal-body">
+                        @Html(synopsis)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+        <div role="tabpanel" class="tab-pane fade" id="gallery">This is the gallery tab</div>
+        <div role="tabpanel" class="tab-pane fade" id="review">This is the review tab</div>
     </div>
+
 }
