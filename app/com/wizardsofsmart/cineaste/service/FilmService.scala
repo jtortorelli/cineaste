@@ -24,7 +24,7 @@ class FilmService @Inject()(filmRepository: FilmRepository) {
       }
    }
 
-   def film(uuid: String): Future[Either[DomainError, (Film, Seq[FilmStaff], Seq[FilmCast], Seq[FilmStudio], Option[FilmSeries], String)]] = {
+   def film(uuid: String): Future[Either[DomainError, (Film, Seq[FilmStaff], Seq[FilmCast], Seq[FilmStudio], Option[FilmSeries], String, Option[List[String]])]] = {
       filmRepository.film(uuid).map {
          case Right(response) =>
             val json = Json.parse(response.body) \\ "data"
@@ -35,10 +35,11 @@ class FilmService @Inject()(filmRepository: FilmRepository) {
             val seriesSeq: Seq[FilmSeries] = for (r <- json(4) \\ "row") yield r(0).as[FilmSeries]
             val series: Option[FilmSeries] = if (seriesSeq.nonEmpty) Some(seriesSeq(0)) else None
             val synopsis = getSynopsis(uuid)
+            val gallery = getGallery(uuid)
             if (films.isEmpty || staff.isEmpty || cast.isEmpty || studios.isEmpty || synopsis.isEmpty) {
                Left(new EmptyResultsError)
             } else {
-               Right((films(0), staff, cast, studios, series, synopsis.get))
+               Right((films(0), staff, cast, studios, series, synopsis.get, gallery))
             }
          case Left(error) => Left(error)
       }
@@ -46,11 +47,16 @@ class FilmService @Inject()(filmRepository: FilmRepository) {
 
    private def getSynopsis(uuid: String): Option[String] = {
       val source = Play.getExistingFile(s"public/text/synopses/$uuid.txt")
-      if (source.isDefined) {
-         Some(Source.fromFile(source.get).getLines().toSeq.tail.mkString("<p>", "</p><p>", "</p>"))
-      } else {
-         None
-      }
+      source.map { file =>
+         Some(Source.fromFile(file).getLines().toSeq.tail.mkString("<p>", "</p><p>", "</p>"))
+      } getOrElse None
+   }
+
+   private def getGallery(uuid: String): Option[List[String]] = {
+      val source = Play.getExistingFile(s"public/images/galleries/films/$uuid")
+      source.map { dir =>
+         Some(dir.list().toList.sorted)
+      } getOrElse None
    }
 
 }
