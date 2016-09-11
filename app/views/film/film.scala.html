@@ -5,7 +5,8 @@
 @import com.wizardsofsmart.cineaste.domain.film.FilmStudio
 @import com.wizardsofsmart.cineaste.domain.people.Person
 @import com.wizardsofsmart.cineaste.domain.people.Group
-@(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries], synopsis: String)
+@import com.wizardsofsmart.cineaste.value.Photo
+@(film: Film, staff: Seq[FilmStaff], cast: Seq[FilmCast], studios: Seq[FilmStudio], series: Option[FilmSeries], synopsis: String, gallery: Option[List[Photo]])
 @views.html.layout.base(Some(film.title)) {
     <div class="row">
         <h1>@film.title</h1>
@@ -203,7 +204,15 @@
             </div>
 
         </div>
-        <div role="tabpanel" class="tab-pane fade" id="gallery">This is the gallery tab</div>
+        <div role="tabpanel" class="tab-pane fade" id="gallery">
+            @gallery.map { g =>
+               @for(pic <- g) {
+                   <a class="gallery" href="@routes.Assets.versioned("images/galleries/films/" + film.uuid + "/" + pic.fileName)" data-lightbox="@{film.uuid}">
+                       <img class="img-thumbnail gallery" src="@routes.Assets.versioned("images/galleries/films/" + film.uuid + "/" + pic.fileName)" height="@{pic.thumbHeight}" width="150"/>
+                   </a>
+               }
+            }
+        </div>
         <div role="tabpanel" class="tab-pane fade" id="review">This is the review tab</div>
     </div>
 

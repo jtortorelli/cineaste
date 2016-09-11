@@ -7,11 +7,11 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
-   jdbc,
-   cache,
-   ws,
-   "joda-time" % "joda-time" % "2.9.2",
-   specs2 % Test
+  jdbc,
+  cache,
+  ws,
+  "joda-time" % "joda-time" % "2.9.2",
+  specs2 % Test
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
