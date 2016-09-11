@@ -32,53 +32,71 @@
 
                 <div class="col-md-4">
                     <div id="overview">
-                        <table class="table table-condensed table-striped table-nonfluid">
-                            <caption>Info</caption>
+                        <table class="display-table table-nonfluid">
                             @if(film.japaneseTitleUnicode.isDefined && film.japaneseTitleTransliteration.isDefined && film.japaneseTitleTranslation.isDefined) {
                                 <tr>
-                                    <td>Original Title</td>
-                                    <td><i>@Html(film.japaneseTitleUnicode.get)</i><br/>(<i>@film.japaneseTitleTransliteration.get</i> / <i>@film.japaneseTitleTranslation.get</i>)</td>
+                                    <td>
+                                        <span class="display-field">Original Title</span><br/>
+                                        <span class="display-value">@Html(film.japaneseTitleUnicode.get)</span><br/>
+                                        <span class="display-field"><i>@film.japaneseTitleTransliteration.get</i> | <i>@film.japaneseTitleTranslation.get</i></span>
+                                    </td>
                                 </tr>
                             }
                             @film.aliases.map { aliases =>
-                                <tr>
-                                    <td>Also known as</td>
-                                    <td>@Html(aliases.mkString("<i>", "</i><br/><i>", "</i>"))</td>
-                                </tr>
+                              <tr>
+                                  <td>
+                                      <span class="display-field">Also known as</span><br/>
+                                      <span class="display-value">@Html(aliases.mkString("<i>", "</i><br/><i>", "</i>"))</span>
+                                  </td>
+                              </tr>
                             }
                             <tr>
-                                <td>Release Date</td>
-                                <td>@film.displayReleaseDate</td>
+                                <td>
+                                    <span class="display-field">Release Date</span><br/>
+                                    <span class="display-value">@film.displayReleaseDate</span>
+                                </td>
                             </tr>
                             @defining(for(studio <- studios) yield studio.name) { studioNames =>
                                 <tr>
-                                    <td>Produced by</td>
-                                    <td>@Html(studioNames.mkString("<br/>"))</td>
+                                    <td>
+                                        <span class="display-field">Produced by</span><br/>
+                                        <span class="display-value">@Html(studioNames.mkString("<br/>"))</span>
+                                    </td>
                                 </tr>
                             }
                             <tr>
-                                <td>Runtime</td>
-                                <td>@film.duration minutes</td>
+                                <td>
+                                    <span class="display-field">Runtime</span><br/>
+                                    <span class="display-value">@{film.duration}m</span>
+                                </td>
                             </tr>
                             @series.map { series =>
                                 @series.precedent.map { precedent =>
                                     <tr>
-                                        <td>Preceded by</td>
-                                        @if(precedent.showcase) {
-                                            <td><a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a></td>
-                                        } else {
-                                            <td>Preceded by <i>@precedent.title</i></td>
-                                        }
+                                        <td>
+                                            <span class="display-field">Preceded by</span><br/>
+                                            <span class="display-value">
+                                                @if(precedent.showcase) {
+                                                    <a href="@routes.FilmController.film(precedent.uuid)"><i>@precedent.title</i></a>
+                                                } else {
+                                                    <i>@precedent.title</i>
+                                                }
+                                            </span>
+                                        </td>
                                     </tr>
                                 }
                                 @series.antecedent.map { antecedent =>
                                     <tr>
-                                        <td>Followed by</td>
-                                        @if(antecedent.showcase) {
-                                            <td><a href="@routes.FilmController.film(antecedent.uuid)"><i>@antecedent.title</i></a></td>
-                                        } else {
-                                            <td><i>@antecedent.title</i></td>
-                                        }
+                                        <td>
+                                            <span class="display-field">Followed by</span><br/>
+                                            <span class="display-value">
+                                                @if(antecedent.showcase) {
+                                                    <a href="@routes.FilmController.film(antecedent.uuid)"><i>@antecedent.title</i></a>
+                                                } else {
+                                                    <i>@antecedent.title</i>
+                                                }
+                                            </span>
+                                        </td>
                                     </tr>
                                 }
                             }
@@ -89,26 +107,30 @@
                 <div class="col-md-4">
                     <div id="staff">
                         <!-- Staff -->
-                        <table class="table table-condensed table-striped table-nonfluid">
-                            <caption>Staff</caption>
+                        <table class="display-table table-nonfluid">
                             @for(role <- staff) {
                                 <tr>
-                                    <td>@role.role</td>
-                                    <td>
-                                    @for(person <- role.people) {
-                                        @if(person.showcase) {
-                                            @person match {
-                                                case p: Person => {
-                                                    <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a> <br/>
+                                    <td class="display-left">
+                                        <span class="display-field">@role.role</span>
+                                    </td>
+
+                                    <td class="display-right">
+                                        <span class="display-value">
+                                        @for(person <- role.people) {
+                                            @if(person.showcase) {
+                                                @person match {
+                                                    case p: Person => {
+                                                        <a href="@routes.PeopleController.person(p.uuid)">@p.displayName</a> <br/>
+                                                    }
+                                                    case g: Group => {
+                                                        <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a> <br/>
+                                                    }
                                                 }
-                                                case g: Group => {
-                                                    <a href="@routes.PeopleController.group(g.uuid)">@g.displayName</a> <br/>
-                                                }
+                                            } else {
+                                                @person.displayName <br/>
                                             }
-                                        } else {
-                                            @person.displayName <br/>
                                         }
-                                    }
+                                        </span>
                                     </td>
                                 </tr>
                             }
