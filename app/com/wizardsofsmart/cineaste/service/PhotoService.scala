@@ -37,7 +37,7 @@ class PhotoService @Inject()(cache: CacheApi) {
     val bimg = ImageIO.read(new File(path))
     val width = bimg.getWidth
     val height = bimg.getHeight
-    cache.set(path + ".height", height.toInt)
+    cache.set(path + ".height", height)
     cache.set(path + ".width", width)
     Photo(name, height, width)
   }
