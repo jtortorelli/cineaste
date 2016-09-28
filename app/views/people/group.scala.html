@@ -8,39 +8,57 @@
 
 @views.html.layout.base(Some(group.displayName)) {
     <h1>@group.displayName</h1>
-    @if(resource("/public/images/profile_pics/group/" + group.uuid + ".jpg").isDefined) {
-        <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/group/" + group.uuid + ".jpg")">
-    } else {
-        <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/group/default_group.jpg")">
 
-    }
-    <table class="table table-condensed table-striped table-nonfluid">
-        @group.japaneseName.map { japaneseName =>
-            <tr>
-                <td>Japanese Name</td>
-                <td>@Html(japaneseName)</td>
-            </tr>
-        }
-        @if(members.nonEmpty) {
-            <tr>
-                <td>Members</td>
-                <td>@Html(members.map(x => x.displayName).mkString("<br />"))</td>
-            </tr>
-        }
-        @group.activePeriod.map { period =>
-            <tr>
-                <td>Active Period</td>
-                <td>@period</td>
-            </tr>
-        }
-    </table>
+    <div class="cineaste-tabs">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
+            <li role="presentation"><a href="#gallery" aria-controls="gallery" role="tab" data-toggle="tab">Gallery</a></li>
+        </ul>
+    </div>
 
-    @bio.map { bio =>
-        <div>
-            @Html(bio)
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="overview">
+            <div class="row">
+                @if(resource("/public/images/profile_pics/group/" + group.uuid + ".jpg").isDefined) {
+                    <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/group/" + group.uuid + ".jpg")">
+                } else {
+                    <img class="img-thumbnail" height="200" width="200" src="@routes.Assets.versioned("images/profile_pics/group/default_group.jpg")">
+
+                }
+                <table class="table table-condensed table-striped table-nonfluid">
+                    @group.japaneseName.map { japaneseName =>
+                        <tr>
+                            <td>Japanese Name</td>
+                            <td>@Html(japaneseName)</td>
+                        </tr>
+                    }
+                    @if(members.nonEmpty) {
+                        <tr>
+                            <td>Members</td>
+                            <td>@Html(members.map(x => x.displayName).mkString("<br />"))</td>
+                        </tr>
+                    }
+                    @group.activePeriod.map { period =>
+                        <tr>
+                            <td>Active Period</td>
+                            <td>@period</td>
+                        </tr>
+                    }
+                </table>
+
+                @bio.map { bio =>
+                    <div>
+                        @Html(bio)
+                    </div>
+                }
+
+                @views.html.people.selectedFilmography(roles)
+
+            </div>
         </div>
-    }
-
-    @views.html.people.selectedFilmography(roles)
+        <div role="tabpanel" class="tab-pane fade" id="gallery">
+            This is the gallery for this person
+        </div>
+    </div>
 
 }
