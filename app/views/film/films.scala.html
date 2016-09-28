@@ -1,17 +1,87 @@
 @import com.wizardsofsmart.cineaste.domain.film.Film
+@import play.api.libs.json.Json
 @(films: Seq[Film])
 @views.html.layout.base(Some("Films")) {
     <h1>Films</h1>
     <p>This is where the films go.</p>
     <div class="input-group">
         <span class="input-group-addon" id="search-icon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
-        <input type="text" class="form-control" placeholder="Search by title">
+        <input type="text" id="film-search-field" class="form-control" placeholder="Search by title">
     </div>
-    <div>
-        <ul>
+    <div id="film-list">
+    </div>
+    <script>
+        var filmsHash = @Html(Json.stringify(Json.toJson(films)));
+
+        var filmLinks = [];
         @for(film <- films) {
-            <li><a href="@(routes.FilmController.film(film.uuid))"><span class="display-value">@film.title</span> <span class="display-field">(@film.releaseYear)</span></a></li>
+            filmLinks.push("<li><a href=\"" + "@(routes.FilmController.film(film.uuid))" + "\"><span class=\"display-value\">" + "@film.title" + "</span> <span class=\"display-field\">(" + "@film.releaseYear" + ")</span></a></li>");
         }
-        </ul>
-    </div>
+
+        for (var i = 0; i < filmsHash.length; i++) {
+            filmsHash[i].link = filmLinks[i];
+        }
+
+        var filmTitleContains = function(filmTitle, searchTerms) {
+          var flags = [];
+          for (var i = 0; i < searchTerms.length; i++) {
+              if (filmTitle.toUpperCase().indexOf(searchTerms[i].toUpperCase()) < 0) {
+                  flags.push(false);
+              } else {
+                  flags.push(true);
+              }
+          }
+          return !flags.includes(false);
+        };
+
+        var filmAliasesContain = function(filmAliases, searchTerms) {
+            if (null == filmAliases) {
+                return false;
+            } else {
+                var aliasFlags = [];
+                for (var i = 0; i < filmAliases.length; i++) {
+                    var searchFlags = [];
+                    for (var j = 0; j < searchTerms.length; j++) {
+                        if (filmAliases[i].toUpperCase().indexOf(searchTerms[j].toUpperCase()) < 0) {
+                            searchFlags.push(false);
+                        } else {
+                            searchFlags.push(true);
+                        }
+                    }
+                    aliasFlags.push(!searchFlags.includes(false));
+                }
+                return aliasFlags.includes(true);
+            }
+        };
+
+        var resetFilms = function() {
+            $("#film-list").empty();
+            $("#film-list").append("<ul>");
+            for (var k = 0; k < filmsHash.length; k++) {
+                $("#film-list").append(filmsHash[k].link);
+            }
+            $("#film-list").append("</ul>")
+        };
+
+        $(document).ready(function() {
+            resetFilms();
+            $("#film-search-field").keyup(function() {
+                var trimString = $.trim($("#film-search-field").val());
+                if (trimString.length < 1) {
+                    resetFilms();
+                } else {
+                    var strings = trimString.split(" ");
+                    var filteredFilms = filmsHash.filter(function(el) {
+                       return filmTitleContains(el.title, strings) || filmAliasesContain(el.aliases, strings)
+                    });
+                    $("#film-list").empty();
+                    $("#film-list").append("<ul>");
+                    for (var k = 0; k < filteredFilms.length; k++) {
+                        $("#film-list").append(filteredFilms[k].link);
+                    }
+                    $("#film-list").append("</ul>")
+                }
+            });
+        });
+    </script>
 }
