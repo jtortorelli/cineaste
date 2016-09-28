@@ -3,9 +3,15 @@
 @views.html.layout.base(Some("Films")) {
     <h1>Films</h1>
     <p>This is where the films go.</p>
-    <ul>
-    @for(film <- films) {
-        <li><a href="@(routes.FilmController.film(film.uuid))"><span class="display-value">@film.title</span> <span class="display-field">(@film.releaseYear)</span></a></li>
-    }
-    </ul>
+    <div class="input-group">
+        <span class="input-group-addon" id="search-icon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+        <input type="text" class="form-control" placeholder="Search by title">
+    </div>
+    <div>
+        <ul>
+        @for(film <- films) {
+            <li><a href="@(routes.FilmController.film(film.uuid))"><span class="display-value">@film.title</span> <span class="display-field">(@film.releaseYear)</span></a></li>
+        }
+        </ul>
+    </div>
 }
