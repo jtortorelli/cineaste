@@ -1,5 +1,4 @@
-Godzilla Cineaste
-=================================
+# Godzilla Cineaste
 
 To launch, you must have Neo4j 2.3.x installed. Cineaste was developed with Neo4j 2.3.2. You must also have the cineaste datasource, and have Neo4j point to it.
 
